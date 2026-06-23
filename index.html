@@ -207,6 +207,26 @@
             display: none !important;
         }
 
+        /* ESTADO DE PAGO */
+        .estado-pago {
+            display: inline-block;
+            padding: 3px 15px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .estado-pagado {
+            background: #38a169;
+            color: white;
+        }
+
+        .estado-pendiente {
+            background: #e53e3e;
+            color: white;
+        }
+
         /* RECIBO */
         .recibo-container {
             background: #ffffff;
@@ -369,6 +389,11 @@
             }
             .recibo-header .estado {
                 background: #38a169 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .estado-pagado,
+            .estado-pendiente {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
@@ -615,6 +640,21 @@
                 <div class="hint">Nombre del grupo o familia</div>
             </div>
 
+            <!-- ESTADO DE PAGO -->
+            <div class="form-group">
+                <label>ESTADO DE PAGO <span class="required">*</span></label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="estadoPago" value="pagado" checked>
+                        Pagado el día de la excursión
+                    </label>
+                    <label>
+                        <input type="radio" name="estadoPago" value="pendiente">
+                        Pago pendiente
+                    </label>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label>TRANSPORTE</label>
                 <div class="radio-group">
@@ -706,7 +746,7 @@
                         <span class="etiqueta">Tipo de Recogida</span>
                         <span class="valor" id="displayTipoRecogida">Hotel</span>
                     </div>
-                    <!-- Hotel - La etiqueta cambia dinámicamente -->
+                    <!-- Hotel -->
                     <div class="recibo-fila" id="filaLugarRecogidaHotel">
                         <span class="etiqueta" id="etiquetaLugarHotel">Hotel</span>
                         <span class="valor" id="displayLugarRecogidaHotel">-</span>
@@ -715,7 +755,7 @@
                         <span class="etiqueta">Habitación</span>
                         <span class="valor" id="displayHabitacion">-</span>
                     </div>
-                    <!-- Airbnb - La etiqueta cambia dinámicamente -->
+                    <!-- Airbnb -->
                     <div class="recibo-fila hidden" id="filaApartamento">
                         <span class="etiqueta">Apartamento</span>
                         <span class="valor" id="displayApartamento">-</span>
@@ -735,6 +775,11 @@
                     <div class="recibo-fila">
                         <span class="etiqueta">Transporte</span>
                         <span class="valor" id="displayTransporte">Sí</span>
+                    </div>
+                    <!-- ESTADO DE PAGO -->
+                    <div class="recibo-fila">
+                        <span class="etiqueta">Estado de Pago</span>
+                        <span class="valor" id="displayEstadoPago">Pagado el día de la excursión</span>
                     </div>
                 </div>
 
@@ -779,6 +824,7 @@
 
             document.querySelector('input[name="tipoRecogida"][value="hotel"]').checked = true;
             document.querySelector('input[name="transporte"][value="si"]').checked = true;
+            document.querySelector('input[name="estadoPago"][value="pagado"]').checked = true;
 
             const hoy = new Date();
             const año = hoy.getFullYear();
@@ -898,6 +944,10 @@
             });
         });
 
+        document.querySelectorAll('input[name="estadoPago"]').forEach(radio => {
+            radio.addEventListener('change', generarRecibo);
+        });
+
         document.getElementById('proveedor').addEventListener('change', function() {
             const otroGroup = document.getElementById('otroProveedorGroup');
             if (this.value === 'Otro') {
@@ -960,6 +1010,10 @@
             const transporteRadio = document.querySelector('input[name="transporte"]:checked');
             const transporteTexto = transporteRadio ? (transporteRadio.value === 'si' ? 'Sí' : 'No') : 'Sí';
 
+            const estadoPagoRadio = document.querySelector('input[name="estadoPago"]:checked');
+            const estadoPagoTexto = estadoPagoRadio ? 
+                (estadoPagoRadio.value === 'pagado' ? 'Pagado el día de la excursión' : 'Pago pendiente') : 'Pagado el día de la excursión';
+
             let excursionNombre = proveedor;
             if (proveedor === 'Otro' && otroProveedor) {
                 excursionNombre = otroProveedor;
@@ -1010,6 +1064,7 @@
             document.getElementById('displayTipoRecogida').textContent = tipoRecogidaTexto;
             document.getElementById('displayRegreso').textContent = regreso;
             document.getElementById('displayTransporte').textContent = transporteTexto;
+            document.getElementById('displayEstadoPago').textContent = estadoPagoTexto;
 
             // Grupo - Solo si es Privado
             if (tipo === 'Privado') {
@@ -1114,6 +1169,7 @@
             const tipoRecogida = document.getElementById('displayTipoRecogida').textContent;
             const regreso = document.getElementById('displayRegreso').textContent;
             const transporte = document.getElementById('displayTransporte').textContent;
+            const estadoPago = document.getElementById('displayEstadoPago').textContent;
             const idioma = document.getElementById('displayIdioma').textContent;
             const personasTexto = document.getElementById('displayPersonas').textContent;
             const etiquetaPersonas = document.getElementById('etiquetaPersonas').textContent;
@@ -1150,6 +1206,7 @@
             }
             
             texto += `Transporte: ${transporte}\n`;
+            texto += `Estado de Pago: ${estadoPago}\n`;
             texto += `\n================================\n`;
             texto += `Este recibo es un comprobante de reserva válido.\n`;
             texto += `republicexcursion.com`;
