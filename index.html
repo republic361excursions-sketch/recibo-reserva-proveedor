@@ -222,7 +222,8 @@
             box-shadow: 0 2px 12px rgba(0,0,0,0.08);
         }
 
-        .recibo-container h2 {
+        /* Este título SOLO se ve en pantalla, NO en impresión/PDF */
+        .recibo-container .titulo-pantalla {
             color: #1a202c;
             font-size: 20px;
             font-weight: 600;
@@ -230,6 +231,13 @@
             padding-bottom: 12px;
             border-bottom: 2px solid #2b6cb0;
             letter-spacing: 0.5px;
+        }
+
+        /* Este título NO se muestra en impresión */
+        @media print {
+            .recibo-container .titulo-pantalla {
+                display: none !important;
+            }
         }
 
         .recibo {
@@ -551,7 +559,9 @@
 
         <!-- RECIBO -->
         <div class="recibo-container">
-            <h2>VISTA PREVIA DEL RECIBO</h2>
+            <!-- Este título SOLO se ve en pantalla -->
+            <h2 class="titulo-pantalla">VISTA PREVIA DEL RECIBO</h2>
+
             <div class="recibo" id="recibo">
                 <div class="recibo-numero">
                     NÚMERO DE RESERVA: <strong id="displayNumero">SIN NÚMERO</strong>
@@ -643,7 +653,7 @@
                     <div style="background: #f7fafc; padding: 12px; border-radius: 6px; font-size: 14px; color: #2d3748; border-left: 3px solid #2b6cb0;" id="displayNotas"></div>
                 </div>
 
-                <!-- FOOTER LIMPIO - Solo mensaje de validez -->
+                <!-- FOOTER LIMPIO -->
                 <div class="recibo-footer">
                     <p>Este recibo es un comprobante de reserva válido.</p>
                 </div>
