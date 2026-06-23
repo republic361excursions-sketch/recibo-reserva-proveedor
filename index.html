@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recibo de Reserva - Party Boat Privado</title>
+    <title>Generador de Recibos para Proveedores</title>
     <style>
         * {
             margin: 0;
@@ -15,167 +15,74 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
 
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 800px;
-            width: 100%;
-            padding: 40px;
-            animation: fadeIn 0.8s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header {
-            text-align: center;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            color: #2d3748;
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .header .subtitle {
-            color: #667eea;
-            font-size: 16px;
-            font-weight: 600;
-            margin-top: 5px;
-        }
-
-        .badge {
-            display: inline-block;
-            background: #48bb78;
-            color: white;
-            padding: 5px 20px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-
-        .section {
-            margin-bottom: 25px;
-        }
-
-        .section-title {
-            color: #2d3748;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-        }
-
-        .section-title .icon {
-            margin-right: 10px;
-            font-size: 20px;
-        }
-
-        .info-grid {
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px 30px;
+            gap: 30px;
         }
 
-        .info-item {
-            display: flex;
-            flex-direction: column;
+        @media (max-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .info-item .label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #a0aec0;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        /* FORMULARIO */
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        .info-item .value {
-            font-size: 16px;
+        .form-container h2 {
             color: #2d3748;
-            font-weight: 500;
-            margin-top: 3px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
         }
 
-        .info-item .value.highlight {
-            color: #667eea;
-            font-weight: 700;
+        .form-group {
+            margin-bottom: 15px;
         }
 
-        .full-width {
-            grid-column: 1 / -1;
-        }
-
-        .details-box {
-            background: #f7fafc;
-            border-radius: 12px;
-            padding: 20px;
-            border-left: 4px solid #667eea;
-        }
-
-        .details-box .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .details-box .detail-row:last-child {
-            border-bottom: none;
-        }
-
-        .details-box .detail-label {
+        .form-group label {
+            display: block;
+            font-weight: 600;
             color: #4a5568;
-            font-weight: 600;
-        }
-
-        .details-box .detail-value {
-            color: #2d3748;
-            font-weight: 500;
-        }
-
-        .footer {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid #e2e8f0;
-            text-align: center;
-        }
-
-        .footer p {
-            color: #718096;
+            margin-bottom: 5px;
             font-size: 14px;
-            margin: 5px 0;
         }
 
-        .footer .highlight-text {
-            color: #667eea;
-            font-weight: 600;
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
         }
 
-        .btn-print {
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .btn-generar {
             background: #667eea;
             color: white;
             border: none;
@@ -184,135 +91,501 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 20px;
+            width: 100%;
             transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-generar:hover {
+            background: #5a67d8;
+        }
+
+        .btn-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-actions button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-pdf {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-pdf:hover {
+            background: #38a169;
+        }
+
+        .btn-print {
+            background: #ed8936;
+            color: white;
         }
 
         .btn-print:hover {
-            background: #5a67d8;
+            background: #dd6b20;
+        }
+
+        .btn-copy {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-copy:hover {
+            background: #3182ce;
+        }
+
+        /* RECIBO */
+        .recibo-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .recibo-container h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .recibo {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .recibo-header {
+            text-align: center;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .recibo-header h1 {
+            color: #2d3748;
+            font-size: 24px;
+        }
+
+        .recibo-header .subtitle {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .recibo-badge {
+            display: inline-block;
+            background: #48bb78;
+            color: white;
+            padding: 3px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .recibo-section {
+            margin-bottom: 15px;
+        }
+
+        .recibo-section-title {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #e2e8f0;
+            font-size: 16px;
+        }
+
+        .recibo-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .recibo-row .label {
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .recibo-row .value {
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .recibo-footer {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #e2e8f0;
+            text-align: center;
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .recibo-footer .highlight {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .recibo-number {
+            background: #ebf8ff;
+            padding: 8px 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #2b6cb0;
+        }
+
+        .recibo-number strong {
+            font-size: 16px;
+        }
+
+        .hidden {
+            display: none;
         }
 
         @media print {
             body {
-                background: white;
-                padding: 0;
+                background: white !important;
+                padding: 0 !important;
             }
-            .container {
-                box-shadow: none;
-                padding: 20px;
+            .main-container {
+                display: block !important;
             }
-            .btn-print {
-                display: none;
+            .form-container {
+                display: none !important;
             }
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
+            .recibo-container {
+                box-shadow: none !important;
+                padding: 0 !important;
             }
-            .info-grid {
-                grid-template-columns: 1fr;
+            .recibo {
+                border: none !important;
+                padding: 20px !important;
             }
-            .header h1 {
-                font-size: 22px;
+            .btn-actions {
+                display: none !important;
+            }
+            .recibo-number {
+                background: none !important;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- HEADER -->
-        <div class="header">
-            <h1>🚤 RECIBO DE RESERVA</h1>
-            <div class="subtitle">Party Boat Privado - Cap Cana</div>
-            <span class="badge">✅ CONFIRMADO</span>
+    <div class="main-container">
+        <!-- FORMULARIO -->
+        <div class="form-container">
+            <h2>📝 Datos del Recibo</h2>
+            
+            <div class="form-group">
+                <label>Número de Recibo</label>
+                <input type="text" id="reciboNumero" value="R-2026-001" readonly style="background: #f7fafc;">
+            </div>
+
+            <div class="form-group">
+                <label>Proveedor / Excursión *</label>
+                <select id="proveedor">
+                    <option value="Party Boat Privado">Party Boat Privado</option>
+                    <option value="Snorkel en Catalina">Snorkel en Catalina</option>
+                    <option value="Safari en Dune Buggy">Safari en Dune Buggy</option>
+                    <option value="Paseo en Catamarán">Paseo en Catamarán</option>
+                    <option value="Excursión a Isla Saona">Excursión a Isla Saona</option>
+                    <option value="Otro">Otro (especificar)</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="otroProveedorGroup" style="display:none;">
+                <label>Especificar Proveedor</label>
+                <input type="text" id="otroProveedor" placeholder="Escribe el nombre de la excursión">
+            </div>
+
+            <div class="form-group">
+                <label>Nombre del Cliente *</label>
+                <input type="text" id="cliente" value="Samara Méndez Díaz">
+            </div>
+
+            <div class="form-group">
+                <label>Teléfono / WhatsApp *</label>
+                <input type="text" id="telefono" value="809-841-2909">
+            </div>
+
+            <div class="form-group">
+                <label>Cantidad de Adultos *</label>
+                <input type="number" id="adultos" value="4" min="1">
+            </div>
+
+            <div class="form-group">
+                <label>Cantidad de Niños</label>
+                <input type="number" id="ninos" value="0" min="0">
+            </div>
+
+            <div class="form-group">
+                <label>Fecha *</label>
+                <input type="date" id="fecha" value="2026-06-05">
+            </div>
+
+            <div class="form-group">
+                <label>Hora de Salida *</label>
+                <input type="time" id="hora" value="10:00">
+            </div>
+
+            <div class="form-group">
+                <label>Hotel / Punto de Recogida *</label>
+                <input type="text" id="hotel" value="Hyatt Ziva Cap Cana">
+            </div>
+
+            <div class="form-group">
+                <label>Lugar de Regreso</label>
+                <input type="text" id="regreso" value="Hyatt Ziva Cap Cana">
+            </div>
+
+            <div class="form-group">
+                <label>Idioma</label>
+                <select id="idioma">
+                    <option value="Español">Español</option>
+                    <option value="Inglés">Inglés</option>
+                    <option value="Francés">Francés</option>
+                    <option value="Alemán">Alemán</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Notas adicionales (opcional)</label>
+                <textarea id="notas" placeholder="Instrucciones especiales, alergias, etc."></textarea>
+            </div>
+
+            <button class="btn-generar" onclick="generarRecibo()">🔄 Actualizar Recibo</button>
+
+            <div class="btn-actions">
+                <button class="btn-pdf" onclick="descargarPDF()">📄 Descargar PDF</button>
+                <button class="btn-print" onclick="imprimirRecibo()">🖨️ Imprimir</button>
+                <button class="btn-copy" onclick="copiarEnlace()">📋 Copiar</button>
+            </div>
         </div>
 
-        <!-- DATOS DEL CLIENTE -->
-        <div class="section">
-            <div class="section-title">
-                <span class="icon">👤</span> DATOS DEL CLIENTE
-            </div>
-            <div class="info-grid">
-                <div class="info-item full-width">
-                    <span class="label">Cliente</span>
-                    <span class="value highlight">Samara Méndez Díaz</span>
+        <!-- RECIBO -->
+        <div class="recibo-container" id="reciboContainer">
+            <h2>📋 Vista Previa del Recibo</h2>
+            <div class="recibo" id="recibo">
+                <div class="recibo-number">
+                    📌 Número de Reserva: <strong id="displayNumero">R-2026-001</strong>
                 </div>
-                <div class="info-item">
-                    <span class="label">Acompañantes</span>
-                    <span class="value">4 Personas</span>
+                
+                <div class="recibo-header">
+                    <h1>🚤 RECIBO DE RESERVA</h1>
+                    <div class="subtitle" id="displayProveedor">Party Boat Privado - Cap Cana</div>
+                    <span class="recibo-badge">✅ CONFIRMADO</span>
                 </div>
-                <div class="info-item">
-                    <span class="label">Teléfono / WhatsApp</span>
-                    <span class="value">809-841-2909</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">Idioma</span>
-                    <span class="value">Español</span>
-                </div>
-            </div>
-        </div>
 
-        <!-- DATOS DE LA EXCURSIÓN -->
-        <div class="section">
-            <div class="section-title">
-                <span class="icon">📋</span> DATOS DE LA EXCURSIÓN
-            </div>
-            <div class="details-box">
-                <div class="detail-row">
-                    <span class="detail-label">Excursión Reservada</span>
-                    <span class="detail-value">Party Boat Privado</span>
+                <div class="recibo-section">
+                    <div class="recibo-section-title">👤 DATOS DEL CLIENTE</div>
+                    <div class="recibo-row">
+                        <span class="label">Cliente</span>
+                        <span class="value" id="displayCliente">Samara Méndez Díaz</span>
+                    </div>
+                    <div class="recibo-row">
+                        <span class="label">Teléfono</span>
+                        <span class="value" id="displayTelefono">809-841-2909</span>
+                    </div>
+                    <div class="recibo-row">
+                        <span class="label">Adultos / Niños</span>
+                        <span class="value" id="displayPersonas">4 / 0</span>
+                    </div>
+                    <div class="recibo-row">
+                        <span class="label">Idioma</span>
+                        <span class="value" id="displayIdioma">Español</span>
+                    </div>
                 </div>
-                <div class="detail-row">
-                    <span class="detail-label">Fecha</span>
-                    <span class="detail-value">05/06/2026</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Hora de Salida</span>
-                    <span class="detail-value">10:00 AM</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Lugar de Regreso</span>
-                    <span class="detail-value">Hyatt Ziva Cap Cana</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Cantidad de Personas</span>
-                    <span class="detail-value">Adultos: 4</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Hotel / Punto de Recogida</span>
-                    <span class="detail-value">Hyatt Ziva Cap Cana</span>
-                </div>
-            </div>
-        </div>
 
-        <!-- INFORMACIÓN ADICIONAL -->
-        <div class="section">
-            <div class="section-title">
-                <span class="icon">ℹ️</span> INFORMACIÓN IMPORTANTE
-            </div>
-            <div style="background: #ebf8ff; padding: 15px; border-radius: 10px; border-left: 4px solid #3182ce;">
-                <p style="color: #2c5282; font-size: 14px; line-height: 1.6;">
-                    <strong>📌 Recomendaciones:</strong><br>
-                    • Llegar con 15 minutos de anticipación al punto de recogida.<br>
-                    • Llevar protector solar, toalla y ropa cómoda.<br>
-                    • El recorrido incluye bebidas y snacks a bordo.
-                </p>
-            </div>
-        </div>
+                <div class="recibo-section">
+                    <div class="recibo-section-title">📋 DATOS DE LA EXCURSIÓN</div>
+                    <div class="recibo-row">
+                        <span class="label">Excursión</span>
+                        <span class="value" id="displayExcursion">Party Boat Privado</span>
+                    </div>
+                    <div class="recibo-row">
+                        <span class="label">Fecha</span>
+                        <span class="value" id="displayFecha">05/06/2026</span>
+                    </div>
+                    <div class="recibo-row">
+                        <span class="label">Hora</span>
+                        <span class="value" id="displayHora">10:00 AM</span>
+                    </div>
+                    <div class="recibo-row">
+                        <span class="label">Hotel / Recogida</span>
+                        <span class="value" id="displayHotel">Hyatt Ziva Cap Cana</span>
+                    </div>
+                    <div class="recibo-row">
+                        <span class="label">Lugar de Regreso</span>
+                        <span class="value" id="displayRegreso">Hyatt Ziva Cap Cana</span>
+                    </div>
+                </div>
 
-        <!-- FOOTER -->
-        <div class="footer">
-            <p>📧 <span class="highlight-text">reservas@partyboatcapcana.com</span></p>
-            <p>📞 <span class="highlight-text">+1 809-841-2909</span></p>
-            <p style="font-size: 12px; color: #a0aec0; margin-top: 10px;">
-                Este recibo es un comprobante de reserva válido. 
-                Presentarlo en el punto de encuentro.
-            </p>
-            <button class="btn-print" onclick="window.print()">
-                🖨️ Imprimir Recibo
-            </button>
+                <div class="recibo-section" id="notasSection" style="display:none;">
+                    <div class="recibo-section-title">📝 NOTAS ADICIONALES</div>
+                    <div style="background: #f7fafc; padding: 10px; border-radius: 8px; font-size: 14px; color: #4a5568;" id="displayNotas"></div>
+                </div>
+
+                <div class="recibo-footer">
+                    <p>📧 <span class="highlight">reservas@partyboatcapcana.com</span></p>
+                    <p>📞 <span class="highlight">+1 809-841-2909</span></p>
+                    <p style="font-size: 11px; color: #a0aec0; margin-top: 8px;">
+                        Este recibo es un comprobante de reserva válido. Presentarlo en el punto de encuentro.
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        // Función para generar número de recibo automático
+        function generarNumeroRecibo() {
+            const fecha = new Date();
+            const año = fecha.getFullYear();
+            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            const num = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+            return `R-${año}${mes}${dia}-${num}`;
+        }
+
+        // Mostrar/ocultar campo "Otro proveedor"
+        document.getElementById('proveedor').addEventListener('change', function() {
+            const otroGroup = document.getElementById('otroProveedorGroup');
+            if (this.value === 'Otro (especificar)') {
+                otroGroup.style.display = 'block';
+            } else {
+                otroGroup.style.display = 'none';
+            }
+            generarRecibo();
+        });
+
+        // Generar recibo automáticamente al cambiar cualquier campo
+        document.querySelectorAll('.form-group input, .form-group select, .form-group textarea').forEach(el => {
+            if (el.id !== 'reciboNumero') {
+                el.addEventListener('input', generarRecibo);
+                el.addEventListener('change', generarRecibo);
+            }
+        });
+
+        function generarRecibo() {
+            // Obtener valores del formulario
+            const proveedor = document.getElementById('proveedor').value;
+            const otroProveedor = document.getElementById('otroProveedor').value;
+            const cliente = document.getElementById('cliente').value || 'Cliente no especificado';
+            const telefono = document.getElementById('telefono').value || 'No especificado';
+            const adultos = document.getElementById('adultos').value || 0;
+            const ninos = document.getElementById('ninos').value || 0;
+            const fecha = document.getElementById('fecha').value;
+            const hora = document.getElementById('hora').value;
+            const hotel = document.getElementById('hotel').value || 'No especificado';
+            const regreso = document.getElementById('regreso').value || hotel;
+            const idioma = document.getElementById('idioma').value;
+            const notas = document.getElementById('notas').value;
+
+            // Determinar nombre de la excursión
+            let excursionNombre = proveedor;
+            if (proveedor === 'Otro (especificar)' && otroProveedor) {
+                excursionNombre = otroProveedor;
+            }
+
+            // Formatear fecha
+            const fechaObj = new Date(fecha + 'T00:00:00');
+            const opcionesFecha = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            const fechaFormateada = fechaObj.toLocaleDateString('es-ES', opcionesFecha);
+
+            // Formatear hora
+            const horaObj = new Date(`2000-01-01T${hora}:00`);
+            const horaFormateada = horaObj.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+            // Actualizar recibo
+            document.getElementById('displayNumero').textContent = document.getElementById('reciboNumero').value;
+            document.getElementById('displayProveedor').textContent = excursionNombre + ' - Cap Cana';
+            document.getElementById('displayCliente').textContent = cliente;
+            document.getElementById('displayTelefono').textContent = telefono;
+            document.getElementById('displayPersonas').textContent = `${adultos} / ${ninos}`;
+            document.getElementById('displayIdioma').textContent = idioma;
+            document.getElementById('displayExcursion').textContent = excursionNombre;
+            document.getElementById('displayFecha').textContent = fechaFormateada || 'No especificada';
+            document.getElementById('displayHora').textContent = horaFormateada || 'No especificada';
+            document.getElementById('displayHotel').textContent = hotel;
+            document.getElementById('displayRegreso').textContent = regreso;
+
+            // Notas
+            const notasSection = document.getElementById('notasSection');
+            const displayNotas = document.getElementById('displayNotas');
+            if (notas.trim()) {
+                notasSection.style.display = 'block';
+                displayNotas.textContent = notas;
+            } else {
+                notasSection.style.display = 'none';
+            }
+
+            // Actualizar número de recibo automáticamente si está vacío
+            const numRecibo = document.getElementById('reciboNumero');
+            if (!numRecibo.value || numRecibo.value === 'R-2026-001') {
+                numRecibo.value = generarNumeroRecibo();
+                document.getElementById('displayNumero').textContent = numRecibo.value;
+            }
+        }
+
+        function imprimirRecibo() {
+            window.print();
+        }
+
+        function descargarPDF() {
+            alert('📄 Para descargar PDF:\n1. Haz clic en "Imprimir"\n2. En la ventana de impresión, selecciona "Guardar como PDF"\n3. Elige la ubicación y guarda');
+            window.print();
+        }
+
+        function copiarEnlace() {
+            // Crear un texto con la información del recibo
+            const cliente = document.getElementById('displayCliente').textContent;
+            const excursion = document.getElementById('displayExcursion').textContent;
+            const fecha = document.getElementById('displayFecha').textContent;
+            const num = document.getElementById('displayNumero').textContent;
+            
+            const texto = `📋 RECIBO DE RESERVA\n` +
+                         `Número: ${num}\n` +
+                         `Cliente: ${cliente}\n` +
+                         `Excursión: ${excursion}\n` +
+                         `Fecha: ${fecha}\n` +
+                         `Teléfono: ${document.getElementById('displayTelefono').textContent}\n` +
+                         `Hotel: ${document.getElementById('displayHotel').textContent}\n` +
+                         `\n📌 Presentar en el punto de encuentro.`;
+
+            navigator.clipboard.writeText(texto).then(() => {
+                alert('✅ Información del recibo copiada al portapapeles');
+            }).catch(() => {
+                alert('⚠️ No se pudo copiar. Selecciona el texto manualmente.');
+            });
+        }
+
+        // Generar recibo al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Establecer fecha actual por defecto
+            const hoy = new Date();
+            const fechaStr = hoy.toISOString().split('T')[0];
+            document.getElementById('fecha').value = fechaStr;
+            
+            // Generar número de recibo
+            document.getElementById('reciboNumero').value = generarNumeroRecibo();
+            
+            generarRecibo();
+        });
+    </script>
 </body>
 </html>
