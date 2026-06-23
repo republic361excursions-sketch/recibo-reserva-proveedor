@@ -563,7 +563,6 @@
 
             <div id="camposSinRecogida"></div>
 
-            <!-- LUGAR DE REGRESO - Se oculta cuando es Sin Recogida -->
             <div class="form-group" id="grupoRegreso">
                 <label>LUGAR DE REGRESO</label>
                 <input type="text" id="regreso" placeholder="Ej: Hyatt Ziva Cap Cana">
@@ -590,6 +589,13 @@
                         <option value="Portugués">Portugués</option>
                     </select>
                 </div>
+            </div>
+
+            <!-- CAMPO GRUPO - Solo aparece cuando seleccionas "Privado" -->
+            <div class="form-group hidden" id="grupoGrupo">
+                <label>GRUPO</label>
+                <input type="text" id="nombreGrupo" placeholder="Ej: Familia Pérez, Grupo 10">
+                <div class="hint">Nombre del grupo o familia</div>
             </div>
 
             <div class="form-group">
@@ -668,6 +674,11 @@
                         <span class="etiqueta">Tipo</span>
                         <span class="valor" id="displayTipo">Privado</span>
                     </div>
+                    <!-- Grupo - Solo aparece cuando es Privado -->
+                    <div class="recibo-fila hidden" id="filaGrupo">
+                        <span class="etiqueta">Grupo</span>
+                        <span class="valor" id="displayGrupo">-</span>
+                    </div>
                     <div class="recibo-fila">
                         <span class="etiqueta">Fecha</span>
                         <span class="valor" id="displayFecha">-</span>
@@ -700,7 +711,6 @@
                         <span class="etiqueta">Hora de Recogida</span>
                         <span class="valor" id="displayHoraRecogida">-</span>
                     </div>
-                    <!-- LUGAR DE REGRESO - Se oculta cuando es Sin Recogida -->
                     <div class="recibo-fila" id="filaRegreso">
                         <span class="etiqueta">Lugar de Regreso</span>
                         <span class="valor" id="displayRegreso">-</span>
@@ -725,6 +735,21 @@
     </div>
 
     <script>
+        // Mostrar/Ocultar campo Grupo según Tipo de Excursión
+        document.getElementById('tipoExcursion').addEventListener('change', function() {
+            const grupoGrupo = document.getElementById('grupoGrupo');
+            const filaGrupo = document.getElementById('filaGrupo');
+            
+            if (this.value === 'Privado') {
+                grupoGrupo.classList.remove('hidden');
+                filaGrupo.classList.remove('hidden');
+            } else {
+                grupoGrupo.classList.add('hidden');
+                filaGrupo.classList.add('hidden');
+            }
+            generarRecibo();
+        });
+
         document.querySelectorAll('input[name="tipoRecogida"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 const camposHotel = document.getElementById('camposHotel');
@@ -738,7 +763,6 @@
                 const filaLugarAirbnb = document.getElementById('filaLugarRecogidaAirbnb');
                 const filaHoraRecogida = document.getElementById('filaHoraRecogida');
                 
-                // Ocultar todos
                 camposHotel.classList.add('hidden');
                 camposAirbnb.classList.add('hidden');
                 
@@ -748,7 +772,6 @@
                 filaLugarAirbnb.classList.add('hidden');
                 filaHoraRecogida.classList.add('hidden');
                 
-                // Mostrar según selección
                 if (this.value === 'hotel') {
                     camposHotel.classList.remove('hidden');
                     filaLugarHotel.classList.remove('hidden');
@@ -766,7 +789,6 @@
                     filaRegreso.classList.remove('hidden');
                     document.getElementById('displayTipoRecogida').textContent = 'Airbnb';
                 } else {
-                    // Sin Recogida - Oculta Lugar de Regreso
                     grupoRegreso.classList.add('hidden');
                     filaRegreso.classList.add('hidden');
                     document.getElementById('displayTipoRecogida').textContent = 'Sin Recogida';
@@ -822,6 +844,7 @@
             const regreso = document.getElementById('regreso').value || '-';
             const idioma = document.getElementById('idioma').value;
             const tipo = document.getElementById('tipoExcursion').value;
+            const nombreGrupo = document.getElementById('nombreGrupo').value || '-';
             const notas = document.getElementById('notas').value;
             const numRecibo = document.getElementById('reciboNumero').value || 'SIN NÚMERO';
 
@@ -871,6 +894,14 @@
             document.getElementById('displayTipoRecogida').textContent = tipoRecogidaTexto;
             document.getElementById('displayRegreso').textContent = regreso;
             document.getElementById('displayTransporte').textContent = transporteTexto;
+
+            // Grupo - Solo si es Privado
+            if (tipo === 'Privado') {
+                document.getElementById('displayGrupo').textContent = nombreGrupo;
+                document.getElementById('filaGrupo').classList.remove('hidden');
+            } else {
+                document.getElementById('filaGrupo').classList.add('hidden');
+            }
 
             if (tipoRecogida && tipoRecogida.value === 'hotel') {
                 document.getElementById('displayLugarRecogidaHotel').textContent = lugarHotel;
@@ -965,6 +996,11 @@
             texto += `\n--- DATOS DE LA EXCURSIÓN ---\n`;
             texto += `Excursión: ${excursion}\n`;
             texto += `Tipo: ${tipo}\n`;
+            
+            if (tipo === 'Privado') {
+                texto += `Grupo: ${document.getElementById('displayGrupo').textContent}\n`;
+            }
+            
             texto += `Fecha: ${fecha}\n`;
             texto += `Hora de la Excursión: ${horaExcursion}\n`;
             texto += `Tipo de Recogida: ${tipoRecogida}\n`;
@@ -980,7 +1016,6 @@
                 texto += `Hora de Recogida: ${document.getElementById('displayHoraRecogida').textContent}\n`;
                 texto += `Lugar de Regreso: ${regreso}\n`;
             }
-            // Sin Recogida - No incluye Lugar de Regreso
             
             texto += `Transporte: ${transporte}\n`;
             texto += `\n================================\n`;
