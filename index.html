@@ -591,7 +591,6 @@
                 </div>
             </div>
 
-            <!-- CAMPO GRUPO - Solo aparece cuando seleccionas "Privado" -->
             <div class="form-group hidden" id="grupoGrupo">
                 <label>GRUPO</label>
                 <input type="text" id="nombreGrupo" placeholder="Ej: Familia Pérez, Grupo 10">
@@ -654,8 +653,9 @@
                         <span class="etiqueta">Teléfono</span>
                         <span class="valor" id="displayTelefono">-</span>
                     </div>
+                    <!-- ADULTOS / NIÑOS DINÁMICO -->
                     <div class="recibo-fila">
-                        <span class="etiqueta">Adultos / Niños</span>
+                        <span class="etiqueta" id="etiquetaPersonas">Adultos</span>
                         <span class="valor" id="displayPersonas">-</span>
                     </div>
                     <div class="recibo-fila">
@@ -674,7 +674,6 @@
                         <span class="etiqueta">Tipo</span>
                         <span class="valor" id="displayTipo">Privado</span>
                     </div>
-                    <!-- Grupo - Solo aparece cuando es Privado -->
                     <div class="recibo-fila hidden" id="filaGrupo">
                         <span class="etiqueta">Grupo</span>
                         <span class="valor" id="displayGrupo">-</span>
@@ -735,7 +734,6 @@
     </div>
 
     <script>
-        // Mostrar/Ocultar campo Grupo según Tipo de Excursión
         document.getElementById('tipoExcursion').addEventListener('change', function() {
             const grupoGrupo = document.getElementById('grupoGrupo');
             const filaGrupo = document.getElementById('filaGrupo');
@@ -837,8 +835,8 @@
             const otroProveedor = document.getElementById('otroProveedor').value;
             const cliente = document.getElementById('cliente').value || '-';
             const telefono = document.getElementById('telefono').value || '-';
-            const adultos = document.getElementById('adultos').value || '0';
-            const ninos = document.getElementById('ninos').value || '0';
+            const adultos = parseInt(document.getElementById('adultos').value) || 0;
+            const ninos = parseInt(document.getElementById('ninos').value) || 0;
             const fecha = document.getElementById('fecha').value;
             const horaExcursion = document.getElementById('horaExcursion').value;
             const regreso = document.getElementById('regreso').value || '-';
@@ -882,11 +880,25 @@
 
             const horaRecogidaFormateada = formatearHora(horaRecogida);
 
+            // ============================================
+            // ADULTOS / NIÑOS - FORMATO DINÁMICO
+            // ============================================
+            const etiquetaPersonas = document.getElementById('etiquetaPersonas');
+            const displayPersonas = document.getElementById('displayPersonas');
+
+            if (ninos > 0) {
+                etiquetaPersonas.textContent = 'Adultos / Niños';
+                displayPersonas.textContent = `${adultos} / ${ninos}`;
+            } else {
+                etiquetaPersonas.textContent = 'Adultos';
+                displayPersonas.textContent = `${adultos}`;
+            }
+
+            // Actualizar recibo
             document.getElementById('displayNumero').textContent = numRecibo;
             document.getElementById('displayExcursion').textContent = excursionNombre;
             document.getElementById('displayCliente').textContent = cliente;
             document.getElementById('displayTelefono').textContent = telefono;
-            document.getElementById('displayPersonas').textContent = `${adultos} / ${ninos}`;
             document.getElementById('displayIdioma').textContent = idioma;
             document.getElementById('displayTipo').textContent = tipoTexto;
             document.getElementById('displayFecha').textContent = fechaFormateada;
@@ -983,15 +995,16 @@
             const tipoRecogida = document.getElementById('displayTipoRecogida').textContent;
             const regreso = document.getElementById('displayRegreso').textContent;
             const transporte = document.getElementById('displayTransporte').textContent;
-            const personas = document.getElementById('displayPersonas').textContent;
             const idioma = document.getElementById('displayIdioma').textContent;
+            const personasTexto = document.getElementById('displayPersonas').textContent;
+            const etiquetaPersonas = document.getElementById('etiquetaPersonas').textContent;
 
             let texto = `RECIBO DE RESERVA\n`;
             texto += `================================\n`;
             texto += `Número de Reserva: ${num}\n`;
             texto += `Cliente: ${cliente}\n`;
             texto += `Teléfono: ${telefono}\n`;
-            texto += `Adultos / Niños: ${personas}\n`;
+            texto += `${etiquetaPersonas}: ${personasTexto}\n`;
             texto += `Idioma: ${idioma}\n`;
             texto += `\n--- DATOS DE LA EXCURSIÓN ---\n`;
             texto += `Excursión: ${excursion}\n`;
