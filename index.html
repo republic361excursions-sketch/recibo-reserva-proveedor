@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recibo de Reserva - Republic Excursion</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -147,21 +148,21 @@
             letter-spacing: 0.3px;
         }
 
-        .btn-pdf {
+        .btn-png {
             background: #38a169;
             color: white;
         }
 
-        .btn-pdf:hover {
+        .btn-png:hover {
             background: #2f855a;
         }
 
-        .btn-print {
+        .btn-jpg {
             background: #dd6b20;
             color: white;
         }
 
-        .btn-print:hover {
+        .btn-jpg:hover {
             background: #c05621;
         }
 
@@ -232,17 +233,13 @@
             letter-spacing: 0.5px;
         }
 
-        @media print {
-            .recibo-container .titulo-pantalla {
-                display: none !important;
-            }
-        }
-
         .recibo {
             background: #ffffff;
             border: 1.5px solid #e2e8f0;
             border-radius: 8px;
             padding: 35px 30px;
+            max-width: 650px;
+            margin: 0 auto;
         }
 
         .recibo-header {
@@ -279,7 +276,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* DOMINIO EN EL RECIBO */
         .recibo-dominio {
             text-align: center;
             font-size: 12px;
@@ -292,10 +288,6 @@
             color: #2b6cb0;
             text-decoration: none;
             font-weight: 600;
-        }
-
-        .recibo-dominio a:hover {
-            text-decoration: underline;
         }
 
         .recibo-numero {
@@ -356,6 +348,36 @@
             color: #a0aec0;
         }
 
+        .recibo-footer .dominio-footer {
+            margin-top: 5px;
+            font-size: 10px;
+            color: #a0aec0;
+        }
+
+        /* Badge para tipos */
+        .badge-tipo {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-privado {
+            background: #2b6cb0;
+            color: white;
+        }
+
+        .badge-compartido {
+            background: #38a169;
+            color: white;
+        }
+
+        .badge-grupo {
+            background: #9f7aea;
+            color: white;
+        }
+
         @media print {
             body {
                 background: white !important;
@@ -390,15 +412,76 @@
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
+            .recibo-container .titulo-pantalla {
+                display: none !important;
+            }
             .recibo-dominio {
                 display: none !important;
             }
+            .badge-privado,
+            .badge-compartido,
+            .badge-grupo {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        /* Loading */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .loading-box .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2b6cb0;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-box p {
+            color: #2d3748;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-box">
+            <div class="spinner"></div>
+            <p>Generando imagen...</p>
+        </div>
+    </div>
+
     <div class="main-container">
-        <!-- FORMULARIO -->
         <div class="form-container">
             <h2>DATOS DE LA RESERVA</h2>
             
@@ -481,7 +564,7 @@
                 </div>
             </div>
 
-            <!-- Campos para HOTEL -->
+            <!-- HOTEL -->
             <div class="campos-recogida" id="camposHotel">
                 <div class="form-group">
                     <label>LUGAR DE RECOGIDA <span class="required">*</span></label>
@@ -500,7 +583,7 @@
                 </div>
             </div>
 
-            <!-- Campos para AIRBNB -->
+            <!-- AIRBNB -->
             <div class="campos-recogida hidden" id="camposAirbnb">
                 <div class="form-group">
                     <label>APARTAMENTO <span class="required">*</span></label>
@@ -519,7 +602,6 @@
                 </div>
             </div>
 
-            <!-- SIN RECOGIDA -->
             <div id="camposSinRecogida"></div>
 
             <div class="form-group">
@@ -534,6 +616,7 @@
                     <select id="tipoExcursion">
                         <option value="Privado">Privado</option>
                         <option value="Compartido">Compartido</option>
+                        <option value="Grupo">Grupo</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -571,8 +654,8 @@
             <button class="btn-generar" onclick="generarRecibo()">ACTUALIZAR RECIBO</button>
 
             <div class="btn-actions">
-                <button class="btn-pdf" onclick="descargarPDF()">DESCARGAR PDF</button>
-                <button class="btn-print" onclick="imprimirRecibo()">IMPRIMIR</button>
+                <button class="btn-png" onclick="descargarPNG()">DESCARGAR PNG</button>
+                <button class="btn-jpg" onclick="descargarJPG()">DESCARGAR JPG</button>
                 <button class="btn-copy" onclick="copiarRecibo()">COPIAR TEXTO</button>
             </div>
         </div>
@@ -582,7 +665,6 @@
             <h2 class="titulo-pantalla">VISTA PREVIA DEL RECIBO</h2>
 
             <div class="recibo" id="recibo">
-                <!-- DOMINIO -->
                 <div class="recibo-dominio">
                     <a href="https://republicexcursion.com" target="_blank">republicexcursion.com</a>
                 </div>
@@ -639,7 +721,6 @@
                         <span class="etiqueta">Tipo de Recogida</span>
                         <span class="valor" id="displayTipoRecogida">Hotel</span>
                     </div>
-                    <!-- Hotel -->
                     <div class="recibo-fila" id="filaLugarRecogidaHotel">
                         <span class="etiqueta">Lugar de Recogida</span>
                         <span class="valor" id="displayLugarRecogidaHotel">-</span>
@@ -648,7 +729,6 @@
                         <span class="etiqueta">Habitación</span>
                         <span class="valor" id="displayHabitacion">-</span>
                     </div>
-                    <!-- Airbnb -->
                     <div class="recibo-fila hidden" id="filaApartamento">
                         <span class="etiqueta">Apartamento</span>
                         <span class="valor" id="displayApartamento">-</span>
@@ -657,7 +737,6 @@
                         <span class="etiqueta">Lugar de Recogida</span>
                         <span class="valor" id="displayLugarRecogidaAirbnb">-</span>
                     </div>
-                    <!-- Sin Recogida -->
                     <div class="recibo-fila" id="filaHoraRecogida">
                         <span class="etiqueta">Hora de Recogida</span>
                         <span class="valor" id="displayHoraRecogida">-</span>
@@ -679,14 +758,13 @@
 
                 <div class="recibo-footer">
                     <p>Este recibo es un comprobante de reserva válido.</p>
-                    <p style="margin-top: 5px; font-size: 10px; color: #a0aec0;">republicexcursion.com</p>
+                    <p class="dominio-footer">republicexcursion.com</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Cambiar campos según Tipo de Recogida
         document.querySelectorAll('input[name="tipoRecogida"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 const camposHotel = document.getElementById('camposHotel');
@@ -799,7 +877,7 @@
             }
 
             const horaExcursionFormateada = formatearHora(horaExcursion);
-            const tipoTexto = tipo === 'Privado' ? 'Privado' : 'Compartido';
+            const tipoTexto = tipo === 'Privado' ? 'Privado' : tipo === 'Compartido' ? 'Compartido' : 'Grupo';
 
             const lugarHotel = document.getElementById('lugarRecogidaHotel').value || '-';
             const habitacion = document.getElementById('habitacion').value || '-';
@@ -846,13 +924,51 @@
             }
         }
 
-        function imprimirRecibo() {
-            window.print();
+        function descargarImagen(tipo) {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.classList.add('active');
+
+            const reciboElement = document.getElementById('recibo');
+
+            const options = {
+                scale: 2.5,
+                backgroundColor: '#ffffff',
+                allowTaint: true,
+                useCORS: true,
+                logging: false,
+                width: reciboElement.scrollWidth,
+                height: reciboElement.scrollHeight,
+                onclone: function(document) {
+                    const cloneRecibo = document.getElementById('recibo');
+                    cloneRecibo.style.border = 'none';
+                    cloneRecibo.style.padding = '30px';
+                }
+            };
+
+            html2canvas(reciboElement, options).then(function(canvas) {
+                overlay.classList.remove('active');
+                
+                const link = document.createElement('a');
+                if (tipo === 'png') {
+                    link.download = `recibo-reserva-${document.getElementById('reciboNumero').value || 'sin-numero'}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                } else {
+                    link.download = `recibo-reserva-${document.getElementById('reciboNumero').value || 'sin-numero'}.jpg`;
+                    link.href = canvas.toDataURL('image/jpeg', 0.95);
+                }
+                link.click();
+            }).catch(function(error) {
+                overlay.classList.remove('active');
+                alert('Error al generar la imagen: ' + error.message);
+            });
         }
 
-        function descargarPDF() {
-            alert('Para descargar como PDF:\n1. Haga clic en "IMPRIMIR"\n2. En la ventana de impresión, seleccione "Guardar como PDF"\n3. Elija la ubicación y guarde el archivo');
-            window.print();
+        function descargarPNG() {
+            descargarImagen('png');
+        }
+
+        function descargarJPG() {
+            descargarImagen('jpg');
         }
 
         function copiarRecibo() {
