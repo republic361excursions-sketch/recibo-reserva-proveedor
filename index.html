@@ -217,7 +217,7 @@
             letter-spacing: 0.5px;
         }
 
-        .estado-pagado {
+        .estado-completo {
             background: #38a169;
             color: white;
         }
@@ -392,7 +392,7 @@
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
-            .estado-pagado,
+            .estado-completo,
             .estado-pendiente {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -645,12 +645,12 @@
                 <label>ESTADO DE PAGO <span class="required">*</span></label>
                 <div class="radio-group">
                     <label>
-                        <input type="radio" name="estadoPago" value="pagado" checked>
-                        Pagado el día de la excursión
+                        <input type="radio" name="estadoPago" value="completo" checked>
+                        Completo
                     </label>
                     <label>
                         <input type="radio" name="estadoPago" value="pendiente">
-                        Pago pendiente
+                        Pendiente
                     </label>
                 </div>
             </div>
@@ -779,7 +779,7 @@
                     <!-- ESTADO DE PAGO -->
                     <div class="recibo-fila">
                         <span class="etiqueta">Estado de Pago</span>
-                        <span class="valor" id="displayEstadoPago">Pagado el día de la excursión</span>
+                        <span class="valor" id="displayEstadoPago">Completo</span>
                     </div>
                 </div>
 
@@ -824,7 +824,7 @@
 
             document.querySelector('input[name="tipoRecogida"][value="hotel"]').checked = true;
             document.querySelector('input[name="transporte"][value="si"]').checked = true;
-            document.querySelector('input[name="estadoPago"][value="pagado"]').checked = true;
+            document.querySelector('input[name="estadoPago"][value="completo"]').checked = true;
 
             const hoy = new Date();
             const año = hoy.getFullYear();
@@ -1012,7 +1012,7 @@
 
             const estadoPagoRadio = document.querySelector('input[name="estadoPago"]:checked');
             const estadoPagoTexto = estadoPagoRadio ? 
-                (estadoPagoRadio.value === 'pagado' ? 'Pagado el día de la excursión' : 'Pago pendiente') : 'Pagado el día de la excursión';
+                (estadoPagoRadio.value === 'completo' ? 'Completo' : 'Pendiente') : 'Completo';
 
             let excursionNombre = proveedor;
             if (proveedor === 'Otro' && otroProveedor) {
