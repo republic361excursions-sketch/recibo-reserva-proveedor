@@ -111,29 +111,11 @@
             color: #e53e3e;
         }
 
-        .btn-generar {
-            background: #2b6cb0;
-            color: white;
-            border: none;
-            padding: 11px 25px;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.2s;
-            margin-top: 5px;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-generar:hover {
-            background: #1a4f7a;
-        }
-
         .btn-actions {
             display: flex;
             gap: 10px;
             margin-top: 12px;
+            flex-wrap: wrap;
         }
 
         .btn-actions button {
@@ -146,6 +128,7 @@
             cursor: pointer;
             transition: all 0.2s;
             letter-spacing: 0.3px;
+            min-width: 120px;
         }
 
         .btn-png {
@@ -173,6 +156,15 @@
 
         .btn-copy:hover {
             background: #2b6cb0;
+        }
+
+        .btn-nuevo {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .btn-nuevo:hover {
+            background: #c53030;
         }
 
         .radio-group {
@@ -432,6 +424,28 @@
             color: #2d3748;
             font-weight: 600;
         }
+
+        .mensaje-exito {
+            display: none;
+            background: #c6f6d5;
+            color: #22543d;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-weight: 600;
+            text-align: center;
+            border: 1px solid #9ae6b4;
+        }
+
+        .mensaje-exito.mostrar {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -445,6 +459,11 @@
     <div class="main-container">
         <div class="form-container">
             <h2>DATOS DE LA RESERVA</h2>
+
+            <!-- Mensaje de éxito -->
+            <div class="mensaje-exito" id="mensajeExito">
+                ✅ Recibo descargado correctamente. Puedes continuar con una nueva reserva.
+            </div>
             
             <div class="form-group">
                 <label>NÚMERO DE RECIBO</label>
@@ -616,12 +635,11 @@
                 <textarea id="notas" placeholder="Instrucciones especiales, alergias, requisitos, etc."></textarea>
             </div>
 
-            <button class="btn-generar" onclick="generarRecibo()">ACTUALIZAR RECIBO</button>
-
             <div class="btn-actions">
                 <button class="btn-png" onclick="descargarPNG()">DESCARGAR PNG</button>
                 <button class="btn-jpg" onclick="descargarJPG()">DESCARGAR JPG</button>
                 <button class="btn-copy" onclick="copiarRecibo()">COPIAR TEXTO</button>
+                <button class="btn-nuevo" onclick="nuevaReserva()">NUEVA RESERVA</button>
             </div>
         </div>
 
@@ -653,7 +671,6 @@
                         <span class="etiqueta">Teléfono</span>
                         <span class="valor" id="displayTelefono">-</span>
                     </div>
-                    <!-- ADULTOS / NIÑOS DINÁMICO -->
                     <div class="recibo-fila">
                         <span class="etiqueta" id="etiquetaPersonas">Adultos</span>
                         <span class="valor" id="displayPersonas">-</span>
@@ -734,6 +751,96 @@
     </div>
 
     <script>
+        // =============================================
+        // NUEVA RESERVA - Limpia todos los campos
+        // =============================================
+        function nuevaReserva() {
+            // Limpiar campos de texto
+            document.getElementById('reciboNumero').value = '';
+            document.getElementById('cliente').value = '';
+            document.getElementById('telefono').value = '';
+            document.getElementById('adultos').value = '';
+            document.getElementById('ninos').value = '';
+            document.getElementById('lugarRecogidaHotel').value = '';
+            document.getElementById('habitacion').value = '';
+            document.getElementById('horaRecogida').value = '';
+            document.getElementById('apartamento').value = '';
+            document.getElementById('lugarRecogidaAirbnb').value = '';
+            document.getElementById('horaRecogidaAirbnb').value = '';
+            document.getElementById('regreso').value = '';
+            document.getElementById('nombreGrupo').value = '';
+            document.getElementById('notas').value = '';
+            document.getElementById('otroProveedor').value = '';
+
+            // Restablecer selects
+            document.getElementById('proveedor').value = '';
+            document.getElementById('tipoExcursion').value = 'Privado';
+            document.getElementById('idioma').value = 'Español';
+
+            // Restablecer radios
+            document.querySelector('input[name="tipoRecogida"][value="hotel"]').checked = true;
+            document.querySelector('input[name="transporte"][value="si"]').checked = true;
+
+            // Generar nuevo número de recibo
+            const hoy = new Date();
+            const año = hoy.getFullYear();
+            const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+            const dia = String(hoy.getDate()).padStart(2, '0');
+            const num = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+            document.getElementById('reciboNumero').value = `R-${año}${mes}${dia}-${num}`;
+
+            // Ocultar campos condicionales
+            document.getElementById('otroProveedorGroup').style.display = 'none';
+            document.getElementById('grupoGrupo').classList.add('hidden');
+            document.getElementById('filaGrupo').classList.add('hidden');
+
+            // Mostrar campos de Hotel (por defecto)
+            const camposHotel = document.getElementById('camposHotel');
+            const camposAirbnb = document.getElementById('camposAirbnb');
+            const grupoRegreso = document.getElementById('grupoRegreso');
+            
+            camposHotel.classList.remove('hidden');
+            camposAirbnb.classList.add('hidden');
+            grupoRegreso.classList.remove('hidden');
+
+            // Mostrar filas del recibo
+            document.getElementById('filaRegreso').classList.remove('hidden');
+            document.getElementById('filaLugarRecogidaHotel').classList.remove('hidden');
+            document.getElementById('filaHabitacion').classList.remove('hidden');
+            document.getElementById('filaHoraRecogida').classList.remove('hidden');
+            document.getElementById('filaApartamento').classList.add('hidden');
+            document.getElementById('filaLugarRecogidaAirbnb').classList.add('hidden');
+
+            document.getElementById('displayTipoRecogida').textContent = 'Hotel';
+
+            // Ocultar mensaje de éxito
+            document.getElementById('mensajeExito').classList.remove('mostrar');
+
+            // Actualizar recibo
+            generarRecibo();
+
+            // Mostrar mensaje
+            mostrarMensaje('🔄 Formulario limpiado. Listo para nueva reserva.', '#ebf8ff', '#2b6cb0');
+        }
+
+        // =============================================
+        // MOSTRAR MENSAJE
+        // =============================================
+        function mostrarMensaje(texto, fondo, color) {
+            const msg = document.getElementById('mensajeExito');
+            msg.textContent = texto;
+            msg.style.background = fondo || '#c6f6d5';
+            msg.style.color = color || '#22543d';
+            msg.style.borderColor = fondo ? '#bee3f8' : '#9ae6b4';
+            msg.classList.add('mostrar');
+            setTimeout(() => {
+                msg.classList.remove('mostrar');
+            }, 5000);
+        }
+
+        // =============================================
+        // EVENTOS PARA ACTUALIZACIÓN AUTOMÁTICA
+        // =============================================
         document.getElementById('tipoExcursion').addEventListener('change', function() {
             const grupoGrupo = document.getElementById('grupoGrupo');
             const filaGrupo = document.getElementById('filaGrupo');
@@ -820,6 +927,9 @@
             document.getElementById('displayNumero').textContent = this.value || 'SIN NÚMERO';
         });
 
+        // =============================================
+        // FUNCIONES PRINCIPALES
+        // =============================================
         function formatearHora(hora) {
             if (!hora) return '-';
             try {
@@ -880,9 +990,7 @@
 
             const horaRecogidaFormateada = formatearHora(horaRecogida);
 
-            // ============================================
-            // ADULTOS / NIÑOS - FORMATO DINÁMICO
-            // ============================================
+            // Adultos / Niños - Formato dinámico
             const etiquetaPersonas = document.getElementById('etiquetaPersonas');
             const displayPersonas = document.getElementById('displayPersonas');
 
@@ -937,7 +1045,13 @@
             }
         }
 
+        // =============================================
+        // DESCARGAR IMAGEN
+        // =============================================
         function descargarImagen(tipo) {
+            // Primero actualizar el recibo
+            generarRecibo();
+
             const overlay = document.getElementById('loadingOverlay');
             overlay.classList.add('active');
 
@@ -962,14 +1076,18 @@
                 overlay.classList.remove('active');
                 
                 const link = document.createElement('a');
+                const numRecibo = document.getElementById('reciboNumero').value || 'sin-numero';
                 if (tipo === 'png') {
-                    link.download = `recibo-reserva-${document.getElementById('reciboNumero').value || 'sin-numero'}.png`;
+                    link.download = `recibo-reserva-${numRecibo}.png`;
                     link.href = canvas.toDataURL('image/png');
                 } else {
-                    link.download = `recibo-reserva-${document.getElementById('reciboNumero').value || 'sin-numero'}.jpg`;
+                    link.download = `recibo-reserva-${numRecibo}.jpg`;
                     link.href = canvas.toDataURL('image/jpeg', 0.95);
                 }
                 link.click();
+
+                // Mostrar mensaje de éxito
+                mostrarMensaje('✅ Recibo descargado correctamente. Puedes continuar con una nueva reserva.', '#c6f6d5', '#22543d');
             }).catch(function(error) {
                 overlay.classList.remove('active');
                 alert('Error al generar la imagen: ' + error.message);
@@ -984,7 +1102,12 @@
             descargarImagen('jpg');
         }
 
+        // =============================================
+        // COPIAR TEXTO
+        // =============================================
         function copiarRecibo() {
+            generarRecibo();
+
             const num = document.getElementById('displayNumero').textContent;
             const cliente = document.getElementById('displayCliente').textContent;
             const telefono = document.getElementById('displayTelefono').textContent;
@@ -1036,12 +1159,15 @@
             texto += `republicexcursion.com`;
 
             navigator.clipboard.writeText(texto).then(() => {
-                alert('Información del recibo copiada al portapapeles');
+                mostrarMensaje('✅ Información del recibo copiada al portapapeles', '#c6f6d5', '#22543d');
             }).catch(() => {
                 alert('No se pudo copiar. Seleccione el texto manualmente.');
             });
         }
 
+        // =============================================
+        // INICIALIZAR
+        // =============================================
         document.addEventListener('DOMContentLoaded', function() {
             const hoy = new Date();
             const fechaStr = hoy.toISOString().split('T')[0];
