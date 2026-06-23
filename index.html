@@ -256,13 +256,7 @@
             letter-spacing: 1px;
         }
 
-        .recibo-header .subtitulo {
-            font-size: 15px;
-            color: #2b6cb0;
-            font-weight: 600;
-            margin-top: 2px;
-            letter-spacing: 0.5px;
-        }
+        /* ELIMINADO: .recibo-header .subtitulo (nombre de excursión) */
 
         .recibo-header .estado {
             display: inline-block;
@@ -354,30 +348,6 @@
             color: #a0aec0;
         }
 
-        /* Badge para tipos */
-        .badge-tipo {
-            display: inline-block;
-            padding: 2px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .badge-privado {
-            background: #2b6cb0;
-            color: white;
-        }
-
-        .badge-compartido {
-            background: #38a169;
-            color: white;
-        }
-
-        .badge-grupo {
-            background: #9f7aea;
-            color: white;
-        }
-
         @media print {
             body {
                 background: white !important;
@@ -418,15 +388,8 @@
             .recibo-dominio {
                 display: none !important;
             }
-            .badge-privado,
-            .badge-compartido,
-            .badge-grupo {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
         }
 
-        /* Loading */
         .loading-overlay {
             display: none;
             position: fixed;
@@ -564,7 +527,6 @@
                 </div>
             </div>
 
-            <!-- HOTEL -->
             <div class="campos-recogida" id="camposHotel">
                 <div class="form-group">
                     <label>LUGAR DE RECOGIDA <span class="required">*</span></label>
@@ -583,7 +545,6 @@
                 </div>
             </div>
 
-            <!-- AIRBNB -->
             <div class="campos-recogida hidden" id="camposAirbnb">
                 <div class="form-group">
                     <label>APARTAMENTO <span class="required">*</span></label>
@@ -675,7 +636,7 @@
                 
                 <div class="recibo-header">
                     <div class="titulo">RECIBO DE RESERVA</div>
-                    <div class="subtitulo" id="displayProveedor">-</div>
+                    <!-- ELIMINADO: subtitulo (nombre de excursión) -->
                     <span class="estado">CONFIRMADO</span>
                 </div>
 
@@ -889,12 +850,11 @@
             const horaRecogidaFormateada = formatearHora(horaRecogida);
 
             document.getElementById('displayNumero').textContent = numRecibo;
-            document.getElementById('displayProveedor').textContent = excursionNombre;
+            document.getElementById('displayExcursion').textContent = excursionNombre;
             document.getElementById('displayCliente').textContent = cliente;
             document.getElementById('displayTelefono').textContent = telefono;
             document.getElementById('displayPersonas').textContent = `${adultos} / ${ninos}`;
             document.getElementById('displayIdioma').textContent = idioma;
-            document.getElementById('displayExcursion').textContent = excursionNombre;
             document.getElementById('displayTipo').textContent = tipoTexto;
             document.getElementById('displayFecha').textContent = fechaFormateada;
             document.getElementById('displayHoraExcursion').textContent = horaExcursionFormateada;
