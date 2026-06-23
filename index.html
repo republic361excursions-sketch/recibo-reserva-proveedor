@@ -32,7 +32,6 @@
             }
         }
 
-        /* FORMULARIO */
         .form-container {
             background: #ffffff;
             border-radius: 12px;
@@ -199,14 +198,6 @@
             accent-color: #2b6cb0;
         }
 
-        .campo-condicional {
-            background: #f7fafc;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 3px solid #2b6cb0;
-            margin-top: 5px;
-        }
-
         .campos-recogida {
             background: #f0f4f8;
             padding: 18px;
@@ -217,6 +208,10 @@
 
         .campos-recogida .form-group:last-child {
             margin-bottom: 0;
+        }
+
+        .hidden {
+            display: none !important;
         }
 
         /* RECIBO */
@@ -349,8 +344,27 @@
             margin-top: 5px;
         }
 
-        .hidden {
-            display: none !important;
+        .badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-hotel {
+            background: #2b6cb0;
+            color: white;
+        }
+
+        .badge-airbnb {
+            background: #38a169;
+            color: white;
+        }
+
+        .badge-sin-recogida {
+            background: #e53e3e;
+            color: white;
         }
 
         @media print {
@@ -387,6 +401,12 @@
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
+            .badge-hotel,
+            .badge-airbnb,
+            .badge-sin-recogida {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
         }
     </style>
 </head>
@@ -406,6 +426,7 @@
                 <div class="form-group">
                     <label>PROVEEDOR / EXCURSIÓN <span class="required">*</span></label>
                     <select id="proveedor">
+                        <option value="">Seleccionar...</option>
                         <option value="Party Boat Privado">Party Boat Privado</option>
                         <option value="Snorkel en Catalina">Snorkel en Catalina</option>
                         <option value="Safari en Dune Buggy">Safari en Dune Buggy</option>
@@ -425,33 +446,33 @@
             <div class="form-row">
                 <div class="form-group">
                     <label>NOMBRE DEL CLIENTE <span class="required">*</span></label>
-                    <input type="text" id="cliente" placeholder="Nombre completo" value="Samara Méndez Díaz">
+                    <input type="text" id="cliente" placeholder="Nombre completo">
                 </div>
                 <div class="form-group">
                     <label>TELÉFONO / WHATSAPP <span class="required">*</span></label>
-                    <input type="text" id="telefono" placeholder="Ej: 809-841-2909" value="809-841-2909">
+                    <input type="text" id="telefono" placeholder="Ej: 809-555-1234">
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label>ADULTOS <span class="required">*</span></label>
-                    <input type="number" id="adultos" value="4" min="0">
+                    <input type="number" id="adultos" placeholder="Cantidad" min="0">
                 </div>
                 <div class="form-group">
                     <label>NIÑOS</label>
-                    <input type="number" id="ninos" value="0" min="0">
+                    <input type="number" id="ninos" placeholder="Cantidad" min="0">
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label>FECHA <span class="required">*</span></label>
-                    <input type="date" id="fecha" value="2026-06-05">
+                    <input type="date" id="fecha">
                 </div>
                 <div class="form-group">
                     <label>HORA DE LA EXCURSIÓN</label>
-                    <input type="time" id="horaExcursion" value="10:00">
+                    <input type="time" id="horaExcursion">
                     <div class="hint">Si no aplica, déjelo vacío</div>
                 </div>
             </div>
@@ -467,6 +488,10 @@
                         <input type="radio" name="tipoRecogida" value="airbnb">
                         Airbnb
                     </label>
+                    <label>
+                        <input type="radio" name="tipoRecogida" value="sin-recogida">
+                        Sin Recogida
+                    </label>
                 </div>
             </div>
 
@@ -474,17 +499,17 @@
             <div class="campos-recogida" id="camposHotel">
                 <div class="form-group">
                     <label>LUGAR DE RECOGIDA <span class="required">*</span></label>
-                    <input type="text" id="lugarRecogidaHotel" placeholder="Ej: Riu Bávaro, Villa Sol, Parque Central" value="Hyatt Ziva Cap Cana">
+                    <input type="text" id="lugarRecogidaHotel" placeholder="Ej: Hyatt Ziva Cap Cana, Riu Bávaro">
                     <div class="hint">Nombre del hotel o punto de encuentro</div>
                 </div>
                 <div class="form-group">
                     <label>HABITACIÓN</label>
-                    <input type="text" id="habitacion" placeholder="Ej: 123, Suite 5, Villa B12" value="Suite 305">
+                    <input type="text" id="habitacion" placeholder="Ej: 123, Suite 5, Villa B12">
                     <div class="hint">Número de habitación o identificación</div>
                 </div>
                 <div class="form-group">
                     <label>HORA DE RECOGIDA</label>
-                    <input type="time" id="horaRecogida" value="09:30">
+                    <input type="time" id="horaRecogida">
                     <div class="hint">Hora en que se recogerá al cliente</div>
                 </div>
             </div>
@@ -493,24 +518,38 @@
             <div class="campos-recogida hidden" id="camposAirbnb">
                 <div class="form-group">
                     <label>APARTAMENTO <span class="required">*</span></label>
-                    <input type="text" id="apartamento" placeholder="Ej: Villa B12, Casa 5, Apt 3B" value="Villa B12">
+                    <input type="text" id="apartamento" placeholder="Ej: Villa B12, Casa 5, Apt 3B">
                     <div class="hint">Nombre o número del apartamento</div>
                 </div>
                 <div class="form-group">
                     <label>LUGAR DE RECOGIDA <span class="required">*</span></label>
-                    <input type="text" id="lugarRecogidaAirbnb" placeholder="Ej: Riu Bávaro, Villa Sol, Parque Central" value="Parque Central">
+                    <input type="text" id="lugarRecogidaAirbnb" placeholder="Ej: Parque Central, Pueblo Bávaro">
                     <div class="hint">Punto de referencia para la recogida</div>
                 </div>
                 <div class="form-group">
                     <label>HORA DE RECOGIDA</label>
-                    <input type="time" id="horaRecogidaAirbnb" value="09:30">
+                    <input type="time" id="horaRecogidaAirbnb">
                     <div class="hint">Hora en que se recogerá al cliente</div>
+                </div>
+            </div>
+
+            <!-- Campos para SIN RECOGIDA -->
+            <div class="campos-recogida hidden" id="camposSinRecogida">
+                <div class="form-group">
+                    <label>LUGAR DE LA EXCURSIÓN <span class="required">*</span></label>
+                    <input type="text" id="lugarExcursion" placeholder="Ej: Muelle de Punta Cana, Puerto de Bayahibe">
+                    <div class="hint">Punto de encuentro para la excursión</div>
+                </div>
+                <div class="form-group">
+                    <label>HORA DE LA EXCURSIÓN</label>
+                    <input type="time" id="horaExcursionSinRecogida">
+                    <div class="hint">Hora de la excursión en el punto de encuentro</div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>LUGAR DE REGRESO</label>
-                <input type="text" id="regreso" placeholder="Lugar de regreso" value="Hyatt Ziva Cap Cana">
+                <input type="text" id="regreso" placeholder="Ej: Hyatt Ziva Cap Cana">
                 <div class="hint">Donde se dejará al cliente después de la excursión</div>
             </div>
 
@@ -568,12 +607,12 @@
             <h2>VISTA PREVIA DEL RECIBO</h2>
             <div class="recibo" id="recibo">
                 <div class="recibo-numero">
-                    NÚMERO DE RESERVA: <strong id="displayNumero">R-2026-001</strong>
+                    NÚMERO DE RESERVA: <strong id="displayNumero">SIN NÚMERO</strong>
                 </div>
                 
                 <div class="recibo-header">
                     <div class="titulo">RECIBO DE RESERVA</div>
-                    <div class="subtitulo" id="displayProveedor">Party Boat Privado</div>
+                    <div class="subtitulo" id="displayProveedor">-</div>
                     <span class="estado">CONFIRMADO</span>
                 </div>
 
@@ -581,15 +620,15 @@
                     <div class="recibo-seccion-titulo">DATOS DEL CLIENTE</div>
                     <div class="recibo-fila">
                         <span class="etiqueta">Cliente</span>
-                        <span class="valor" id="displayCliente">Samara Méndez Díaz</span>
+                        <span class="valor" id="displayCliente">-</span>
                     </div>
                     <div class="recibo-fila">
                         <span class="etiqueta">Teléfono</span>
-                        <span class="valor" id="displayTelefono">809-841-2909</span>
+                        <span class="valor" id="displayTelefono">-</span>
                     </div>
                     <div class="recibo-fila">
                         <span class="etiqueta">Adultos / Niños</span>
-                        <span class="valor" id="displayPersonas">4 / 0</span>
+                        <span class="valor" id="displayPersonas">-</span>
                     </div>
                     <div class="recibo-fila">
                         <span class="etiqueta">Idioma</span>
@@ -601,7 +640,7 @@
                     <div class="recibo-seccion-titulo">DATOS DE LA EXCURSIÓN</div>
                     <div class="recibo-fila">
                         <span class="etiqueta">Excursión</span>
-                        <span class="valor" id="displayExcursion">Party Boat Privado</span>
+                        <span class="valor" id="displayExcursion">-</span>
                     </div>
                     <div class="recibo-fila">
                         <span class="etiqueta">Tipo</span>
@@ -609,39 +648,51 @@
                     </div>
                     <div class="recibo-fila">
                         <span class="etiqueta">Fecha</span>
-                        <span class="valor" id="displayFecha">05/06/2026</span>
+                        <span class="valor" id="displayFecha">-</span>
                     </div>
                     <div class="recibo-fila">
                         <span class="etiqueta">Hora de la Excursión</span>
-                        <span class="valor" id="displayHoraExcursion">10:00 AM</span>
+                        <span class="valor" id="displayHoraExcursion">-</span>
                     </div>
                     <div class="recibo-fila">
                         <span class="etiqueta">Tipo de Recogida</span>
                         <span class="valor" id="displayTipoRecogida">Hotel</span>
                     </div>
+                    <!-- Hotel -->
                     <div class="recibo-fila" id="filaLugarRecogidaHotel">
                         <span class="etiqueta">Lugar de Recogida</span>
-                        <span class="valor" id="displayLugarRecogidaHotel">Hyatt Ziva Cap Cana</span>
+                        <span class="valor" id="displayLugarRecogidaHotel">-</span>
                     </div>
                     <div class="recibo-fila" id="filaHabitacion">
                         <span class="etiqueta">Habitación</span>
-                        <span class="valor" id="displayHabitacion">Suite 305</span>
+                        <span class="valor" id="displayHabitacion">-</span>
                     </div>
+                    <!-- Airbnb -->
                     <div class="recibo-fila hidden" id="filaApartamento">
                         <span class="etiqueta">Apartamento</span>
-                        <span class="valor" id="displayApartamento">Villa B12</span>
+                        <span class="valor" id="displayApartamento">-</span>
                     </div>
                     <div class="recibo-fila hidden" id="filaLugarRecogidaAirbnb">
                         <span class="etiqueta">Lugar de Recogida</span>
-                        <span class="valor" id="displayLugarRecogidaAirbnb">Parque Central</span>
+                        <span class="valor" id="displayLugarRecogidaAirbnb">-</span>
                     </div>
+                    <!-- Sin Recogida -->
+                    <div class="recibo-fila hidden" id="filaLugarExcursion">
+                        <span class="etiqueta">Lugar de la Excursión</span>
+                        <span class="valor" id="displayLugarExcursion">-</span>
+                    </div>
+                    <div class="recibo-fila hidden" id="filaHoraExcursionSinRecogida">
+                        <span class="etiqueta">Hora de la Excursión</span>
+                        <span class="valor" id="displayHoraExcursionSinRecogida">-</span>
+                    </div>
+                    <!-- Hora de Recogida (compartida) -->
                     <div class="recibo-fila" id="filaHoraRecogida">
                         <span class="etiqueta">Hora de Recogida</span>
-                        <span class="valor" id="displayHoraRecogida">09:30 AM</span>
+                        <span class="valor" id="displayHoraRecogida">-</span>
                     </div>
                     <div class="recibo-fila">
                         <span class="etiqueta">Lugar de Regreso</span>
-                        <span class="valor" id="displayRegreso">Hyatt Ziva Cap Cana</span>
+                        <span class="valor" id="displayRegreso">-</span>
                     </div>
                     <div class="recibo-fila">
                         <span class="etiqueta">Transporte</span>
@@ -673,30 +724,45 @@
             radio.addEventListener('change', function() {
                 const camposHotel = document.getElementById('camposHotel');
                 const camposAirbnb = document.getElementById('camposAirbnb');
+                const camposSinRecogida = document.getElementById('camposSinRecogida');
+                
                 const filaLugarHotel = document.getElementById('filaLugarRecogidaHotel');
                 const filaHabitacion = document.getElementById('filaHabitacion');
                 const filaApartamento = document.getElementById('filaApartamento');
                 const filaLugarAirbnb = document.getElementById('filaLugarRecogidaAirbnb');
+                const filaLugarExcursion = document.getElementById('filaLugarExcursion');
+                const filaHoraExcursionSinRecogida = document.getElementById('filaHoraExcursionSinRecogida');
                 const filaHoraRecogida = document.getElementById('filaHoraRecogida');
+                
+                // Ocultar todos
+                camposHotel.classList.add('hidden');
+                camposAirbnb.classList.add('hidden');
+                camposSinRecogida.classList.add('hidden');
+                filaLugarHotel.classList.add('hidden');
+                filaHabitacion.classList.add('hidden');
+                filaApartamento.classList.add('hidden');
+                filaLugarAirbnb.classList.add('hidden');
+                filaLugarExcursion.classList.add('hidden');
+                filaHoraExcursionSinRecogida.classList.add('hidden');
+                filaHoraRecogida.classList.add('hidden');
                 
                 if (this.value === 'hotel') {
                     camposHotel.classList.remove('hidden');
-                    camposAirbnb.classList.add('hidden');
                     filaLugarHotel.classList.remove('hidden');
                     filaHabitacion.classList.remove('hidden');
-                    filaApartamento.classList.add('hidden');
-                    filaLugarAirbnb.classList.add('hidden');
                     filaHoraRecogida.classList.remove('hidden');
                     document.getElementById('displayTipoRecogida').textContent = 'Hotel';
-                } else {
-                    camposHotel.classList.add('hidden');
+                } else if (this.value === 'airbnb') {
                     camposAirbnb.classList.remove('hidden');
-                    filaLugarHotel.classList.add('hidden');
-                    filaHabitacion.classList.add('hidden');
                     filaApartamento.classList.remove('hidden');
                     filaLugarAirbnb.classList.remove('hidden');
                     filaHoraRecogida.classList.remove('hidden');
                     document.getElementById('displayTipoRecogida').textContent = 'Airbnb';
+                } else {
+                    camposSinRecogida.classList.remove('hidden');
+                    filaLugarExcursion.classList.remove('hidden');
+                    filaHoraExcursionSinRecogida.classList.remove('hidden');
+                    document.getElementById('displayTipoRecogida').textContent = 'Sin Recogida';
                 }
                 generarRecibo();
             });
@@ -713,7 +779,7 @@
             generarRecibo();
         });
 
-        // Generar recibo automáticamente al cambiar cualquier campo
+        // Generar recibo automáticamente
         document.querySelectorAll('.form-group input, .form-group select, .form-group textarea').forEach(el => {
             if (el.id !== 'reciboNumero' && el.type !== 'radio') {
                 el.addEventListener('input', generarRecibo);
@@ -721,77 +787,76 @@
             }
         });
 
-        // Radio buttons
         document.querySelectorAll('input[type="radio"]').forEach(radio => {
             radio.addEventListener('change', generarRecibo);
         });
 
-        // Campo de número de recibo editable
         document.getElementById('reciboNumero').addEventListener('input', function() {
             document.getElementById('displayNumero').textContent = this.value || 'SIN NÚMERO';
         });
 
+        function formatearHora(hora) {
+            if (!hora) return '-';
+            try {
+                const horaObj = new Date(`2000-01-01T${hora}:00`);
+                return horaObj.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            } catch {
+                return hora;
+            }
+        }
+
         function generarRecibo() {
-            // Obtener valores del formulario
             const proveedor = document.getElementById('proveedor').value;
             const otroProveedor = document.getElementById('otroProveedor').value;
-            const cliente = document.getElementById('cliente').value || 'Cliente no especificado';
-            const telefono = document.getElementById('telefono').value || 'No especificado';
-            const adultos = document.getElementById('adultos').value || 0;
-            const ninos = document.getElementById('ninos').value || 0;
+            const cliente = document.getElementById('cliente').value || '-';
+            const telefono = document.getElementById('telefono').value || '-';
+            const adultos = document.getElementById('adultos').value || '0';
+            const ninos = document.getElementById('ninos').value || '0';
             const fecha = document.getElementById('fecha').value;
             const horaExcursion = document.getElementById('horaExcursion').value;
-            const regreso = document.getElementById('regreso').value || 'No especificado';
+            const regreso = document.getElementById('regreso').value || '-';
             const idioma = document.getElementById('idioma').value;
             const tipo = document.getElementById('tipoExcursion').value;
             const notas = document.getElementById('notas').value;
             const numRecibo = document.getElementById('reciboNumero').value || 'SIN NÚMERO';
 
-            // Tipo de Recogida
             const tipoRecogida = document.querySelector('input[name="tipoRecogida"]:checked');
-            const tipoRecogidaTexto = tipoRecogida ? (tipoRecogida.value === 'hotel' ? 'Hotel' : 'Airbnb') : 'Hotel';
+            const tipoRecogidaTexto = tipoRecogida ? 
+                (tipoRecogida.value === 'hotel' ? 'Hotel' : 
+                 tipoRecogida.value === 'airbnb' ? 'Airbnb' : 'Sin Recogida') : 'Hotel';
 
-            // Transporte
             const transporteRadio = document.querySelector('input[name="transporte"]:checked');
             const transporteTexto = transporteRadio ? (transporteRadio.value === 'si' ? 'Sí' : 'No') : 'Sí';
 
-            // Campos según tipo de recogida
-            const lugarHotel = document.getElementById('lugarRecogidaHotel').value || 'No especificado';
-            const habitacion = document.getElementById('habitacion').value || 'No especificada';
-            const apartamento = document.getElementById('apartamento').value || 'No especificado';
-            const lugarAirbnb = document.getElementById('lugarRecogidaAirbnb').value || 'No especificado';
-            const horaRecogida = document.getElementById('horaRecogida').value || document.getElementById('horaRecogidaAirbnb').value;
-
-            // Determinar nombre de la excursión
             let excursionNombre = proveedor;
             if (proveedor === 'Otro' && otroProveedor) {
                 excursionNombre = otroProveedor;
             }
-
-            // Formatear fecha
-            let fechaFormateada = 'No especificada';
-            if (fecha) {
-                const fechaObj = new Date(fecha + 'T00:00:00');
-                const opcionesFecha = { year: 'numeric', month: '2-digit', day: '2-digit' };
-                fechaFormateada = fechaObj.toLocaleDateString('es-ES', opcionesFecha);
+            if (!excursionNombre || excursionNombre === 'Seleccionar...') {
+                excursionNombre = '-';
             }
 
-            // Formatear hora
-            function formatearHora(hora) {
-                if (!hora) return 'No especificada';
-                try {
-                    const horaObj = new Date(`2000-01-01T${hora}:00`);
-                    return horaObj.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-                } catch {
-                    return hora;
-                }
+            let fechaFormateada = '-';
+            if (fecha) {
+                const fechaObj = new Date(fecha + 'T00:00:00');
+                fechaFormateada = fechaObj.toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' });
             }
 
             const horaExcursionFormateada = formatearHora(horaExcursion);
-            const horaRecogidaFormateada = formatearHora(horaRecogida);
-
-            // Tipo de excursión
             const tipoTexto = tipo === 'Privado' ? 'Privado' : 'Compartido';
+
+            // Campos específicos
+            const lugarHotel = document.getElementById('lugarRecogidaHotel').value || '-';
+            const habitacion = document.getElementById('habitacion').value || '-';
+            const apartamento = document.getElementById('apartamento').value || '-';
+            const lugarAirbnb = document.getElementById('lugarRecogidaAirbnb').value || '-';
+            const lugarExcursion = document.getElementById('lugarExcursion').value || '-';
+            const horaRecogida = document.getElementById('horaRecogida').value || 
+                                  document.getElementById('horaRecogidaAirbnb').value || '-';
+            const horaExcursionSinRecogida = document.getElementById('horaExcursionSinRecogida').value || '-';
+
+            const horaRecogidaFormateada = formatearHora(horaRecogida);
+            const horaExcursionSinRecogidaFormateada = formatearHora(horaExcursionSinRecogida);
 
             // Actualizar recibo
             document.getElementById('displayNumero').textContent = numRecibo;
@@ -808,25 +873,18 @@
             document.getElementById('displayRegreso').textContent = regreso;
             document.getElementById('displayTransporte').textContent = transporteTexto;
 
-            // Campos específicos según tipo
+            // Mostrar/ocultar según tipo
             if (tipoRecogida && tipoRecogida.value === 'hotel') {
                 document.getElementById('displayLugarRecogidaHotel').textContent = lugarHotel;
                 document.getElementById('displayHabitacion').textContent = habitacion;
                 document.getElementById('displayHoraRecogida').textContent = horaRecogidaFormateada;
-                
-                document.getElementById('filaLugarRecogidaHotel').classList.remove('hidden');
-                document.getElementById('filaHabitacion').classList.remove('hidden');
-                document.getElementById('filaApartamento').classList.add('hidden');
-                document.getElementById('filaLugarRecogidaAirbnb').classList.add('hidden');
-            } else {
+            } else if (tipoRecogida && tipoRecogida.value === 'airbnb') {
                 document.getElementById('displayApartamento').textContent = apartamento;
                 document.getElementById('displayLugarRecogidaAirbnb').textContent = lugarAirbnb;
                 document.getElementById('displayHoraRecogida').textContent = horaRecogidaFormateada;
-                
-                document.getElementById('filaLugarRecogidaHotel').classList.add('hidden');
-                document.getElementById('filaHabitacion').classList.add('hidden');
-                document.getElementById('filaApartamento').classList.remove('hidden');
-                document.getElementById('filaLugarRecogidaAirbnb').classList.remove('hidden');
+            } else {
+                document.getElementById('displayLugarExcursion').textContent = lugarExcursion;
+                document.getElementById('displayHoraExcursionSinRecogida').textContent = horaExcursionSinRecogidaFormateada;
             }
 
             // Notas
@@ -862,7 +920,6 @@
             const transporte = document.getElementById('displayTransporte').textContent;
             const personas = document.getElementById('displayPersonas').textContent;
             const idioma = document.getElementById('displayIdioma').textContent;
-            const horaRecogida = document.getElementById('displayHoraRecogida').textContent;
 
             let texto = `RECIBO DE RESERVA\n`;
             texto += `================================\n`;
@@ -881,12 +938,16 @@
             if (tipoRecogida === 'Hotel') {
                 texto += `Lugar de Recogida: ${document.getElementById('displayLugarRecogidaHotel').textContent}\n`;
                 texto += `Habitación: ${document.getElementById('displayHabitacion').textContent}\n`;
-            } else {
+                texto += `Hora de Recogida: ${document.getElementById('displayHoraRecogida').textContent}\n`;
+            } else if (tipoRecogida === 'Airbnb') {
                 texto += `Apartamento: ${document.getElementById('displayApartamento').textContent}\n`;
                 texto += `Lugar de Recogida: ${document.getElementById('displayLugarRecogidaAirbnb').textContent}\n`;
+                texto += `Hora de Recogida: ${document.getElementById('displayHoraRecogida').textContent}\n`;
+            } else {
+                texto += `Lugar de la Excursión: ${document.getElementById('displayLugarExcursion').textContent}\n`;
+                texto += `Hora de la Excursión: ${document.getElementById('displayHoraExcursionSinRecogida').textContent}\n`;
             }
             
-            texto += `Hora de Recogida: ${horaRecogida}\n`;
             texto += `Lugar de Regreso: ${regreso}\n`;
             texto += `Transporte: ${transporte}\n`;
             texto += `\n================================\n`;
@@ -908,7 +969,7 @@
             const fechaStr = hoy.toISOString().split('T')[0];
             document.getElementById('fecha').value = fechaStr;
             
-            // Establecer número de recibo por defecto
+            // Generar número de recibo automático
             const año = hoy.getFullYear();
             const mes = String(hoy.getMonth() + 1).padStart(2, '0');
             const dia = String(hoy.getDate()).padStart(2, '0');
