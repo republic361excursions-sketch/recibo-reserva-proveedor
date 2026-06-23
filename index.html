@@ -520,7 +520,7 @@
                 </div>
                 <div class="form-group">
                     <label>HORA DE LA EXCURSIÓN</label>
-                    <input type="time" id="horaExcursion">
+                    <input type="time" id="horaExcursion" value="00:00">
                     <div class="hint">Si no aplica, déjelo vacío</div>
                 </div>
             </div>
@@ -545,9 +545,9 @@
 
             <div class="campos-recogida" id="camposHotel">
                 <div class="form-group">
-                    <label>LUGAR DE RECOGIDA <span class="required">*</span></label>
+                    <label>HOTEL <span class="required">*</span></label>
                     <input type="text" id="lugarRecogidaHotel" placeholder="Ej: Hyatt Ziva Cap Cana, Riu Bávaro">
-                    <div class="hint">Nombre del hotel o punto de encuentro</div>
+                    <div class="hint">Nombre del hotel</div>
                 </div>
                 <div class="form-group">
                     <label>HABITACIÓN</label>
@@ -568,9 +568,9 @@
                     <div class="hint">Nombre o número del apartamento</div>
                 </div>
                 <div class="form-group">
-                    <label>LUGAR DE RECOGIDA <span class="required">*</span></label>
+                    <label>AIRBNB <span class="required">*</span></label>
                     <input type="text" id="lugarRecogidaAirbnb" placeholder="Ej: Parque Central, Pueblo Bávaro">
-                    <div class="hint">Punto de referencia para la recogida</div>
+                    <div class="hint">Ubicación del Airbnb</div>
                 </div>
                 <div class="form-group">
                     <label>HORA DE RECOGIDA</label>
@@ -706,20 +706,22 @@
                         <span class="etiqueta">Tipo de Recogida</span>
                         <span class="valor" id="displayTipoRecogida">Hotel</span>
                     </div>
+                    <!-- Hotel - La etiqueta cambia dinámicamente -->
                     <div class="recibo-fila" id="filaLugarRecogidaHotel">
-                        <span class="etiqueta">Lugar de Recogida</span>
+                        <span class="etiqueta" id="etiquetaLugarHotel">Hotel</span>
                         <span class="valor" id="displayLugarRecogidaHotel">-</span>
                     </div>
                     <div class="recibo-fila" id="filaHabitacion">
                         <span class="etiqueta">Habitación</span>
                         <span class="valor" id="displayHabitacion">-</span>
                     </div>
+                    <!-- Airbnb - La etiqueta cambia dinámicamente -->
                     <div class="recibo-fila hidden" id="filaApartamento">
                         <span class="etiqueta">Apartamento</span>
                         <span class="valor" id="displayApartamento">-</span>
                     </div>
                     <div class="recibo-fila hidden" id="filaLugarRecogidaAirbnb">
-                        <span class="etiqueta">Lugar de Recogida</span>
+                        <span class="etiqueta" id="etiquetaLugarAirbnb">Airbnb</span>
                         <span class="valor" id="displayLugarRecogidaAirbnb">-</span>
                     </div>
                     <div class="recibo-fila" id="filaHoraRecogida">
@@ -751,10 +753,9 @@
 
     <script>
         // =============================================
-        // NUEVA RESERVA - Limpia todos los campos
+        // NUEVA RESERVA
         // =============================================
         function nuevaReserva() {
-            // Limpiar campos de texto
             document.getElementById('reciboNumero').value = '';
             document.getElementById('cliente').value = '';
             document.getElementById('telefono').value = '';
@@ -770,20 +771,15 @@
             document.getElementById('nombreGrupo').value = '';
             document.getElementById('notas').value = '';
             document.getElementById('otroProveedor').value = '';
-
-            // REINICIAR HORA DE LA EXCURSIÓN A 00:00
             document.getElementById('horaExcursion').value = '00:00';
 
-            // Restablecer selects
             document.getElementById('proveedor').value = '';
             document.getElementById('tipoExcursion').value = 'Privado';
             document.getElementById('idioma').value = 'Español';
 
-            // Restablecer radios
             document.querySelector('input[name="tipoRecogida"][value="hotel"]').checked = true;
             document.querySelector('input[name="transporte"][value="si"]').checked = true;
 
-            // Generar nuevo número de recibo
             const hoy = new Date();
             const año = hoy.getFullYear();
             const mes = String(hoy.getMonth() + 1).padStart(2, '0');
@@ -791,16 +787,13 @@
             const num = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
             document.getElementById('reciboNumero').value = `R-${año}${mes}${dia}-${num}`;
 
-            // Fecha actual
             const fechaStr = hoy.toISOString().split('T')[0];
             document.getElementById('fecha').value = fechaStr;
 
-            // Ocultar campos condicionales
             document.getElementById('otroProveedorGroup').style.display = 'none';
             document.getElementById('grupoGrupo').classList.add('hidden');
             document.getElementById('filaGrupo').classList.add('hidden');
 
-            // Mostrar campos de Hotel (por defecto)
             const camposHotel = document.getElementById('camposHotel');
             const camposAirbnb = document.getElementById('camposAirbnb');
             const grupoRegreso = document.getElementById('grupoRegreso');
@@ -809,7 +802,6 @@
             camposAirbnb.classList.add('hidden');
             grupoRegreso.classList.remove('hidden');
 
-            // Mostrar filas del recibo
             document.getElementById('filaRegreso').classList.remove('hidden');
             document.getElementById('filaLugarRecogidaHotel').classList.remove('hidden');
             document.getElementById('filaHabitacion').classList.remove('hidden');
@@ -818,20 +810,14 @@
             document.getElementById('filaLugarRecogidaAirbnb').classList.add('hidden');
 
             document.getElementById('displayTipoRecogida').textContent = 'Hotel';
+            document.getElementById('etiquetaLugarHotel').textContent = 'Hotel';
 
-            // Ocultar mensaje de éxito
             document.getElementById('mensajeExito').classList.remove('mostrar');
 
-            // Actualizar recibo
             generarRecibo();
-
-            // Mostrar mensaje
             mostrarMensaje('🔄 Formulario limpiado. Listo para nueva reserva.', '#ebf8ff', '#2b6cb0');
         }
 
-        // =============================================
-        // MOSTRAR MENSAJE
-        // =============================================
         function mostrarMensaje(texto, fondo, color) {
             const msg = document.getElementById('mensajeExito');
             msg.textContent = texto;
@@ -845,7 +831,7 @@
         }
 
         // =============================================
-        // EVENTOS PARA ACTUALIZACIÓN AUTOMÁTICA
+        // EVENTOS
         // =============================================
         document.getElementById('tipoExcursion').addEventListener('change', function() {
             const grupoGrupo = document.getElementById('grupoGrupo');
@@ -873,6 +859,8 @@
                 const filaApartamento = document.getElementById('filaApartamento');
                 const filaLugarAirbnb = document.getElementById('filaLugarRecogidaAirbnb');
                 const filaHoraRecogida = document.getElementById('filaHoraRecogida');
+                const etiquetaLugarHotel = document.getElementById('etiquetaLugarHotel');
+                const etiquetaLugarAirbnb = document.getElementById('etiquetaLugarAirbnb');
                 
                 camposHotel.classList.add('hidden');
                 camposAirbnb.classList.add('hidden');
@@ -891,6 +879,7 @@
                     grupoRegreso.classList.remove('hidden');
                     filaRegreso.classList.remove('hidden');
                     document.getElementById('displayTipoRecogida').textContent = 'Hotel';
+                    etiquetaLugarHotel.textContent = 'Hotel';
                 } else if (this.value === 'airbnb') {
                     camposAirbnb.classList.remove('hidden');
                     filaApartamento.classList.remove('hidden');
@@ -899,6 +888,7 @@
                     grupoRegreso.classList.remove('hidden');
                     filaRegreso.classList.remove('hidden');
                     document.getElementById('displayTipoRecogida').textContent = 'Airbnb';
+                    etiquetaLugarAirbnb.textContent = 'Airbnb';
                 } else {
                     grupoRegreso.classList.add('hidden');
                     filaRegreso.classList.add('hidden');
@@ -1033,10 +1023,12 @@
                 document.getElementById('displayLugarRecogidaHotel').textContent = lugarHotel;
                 document.getElementById('displayHabitacion').textContent = habitacion;
                 document.getElementById('displayHoraRecogida').textContent = horaRecogidaFormateada;
+                document.getElementById('etiquetaLugarHotel').textContent = 'Hotel';
             } else if (tipoRecogida && tipoRecogida.value === 'airbnb') {
                 document.getElementById('displayApartamento').textContent = apartamento;
                 document.getElementById('displayLugarRecogidaAirbnb').textContent = lugarAirbnb;
                 document.getElementById('displayHoraRecogida').textContent = horaRecogidaFormateada;
+                document.getElementById('etiquetaLugarAirbnb').textContent = 'Airbnb';
             } else {
                 document.getElementById('displayHoraRecogida').textContent = '-';
             }
@@ -1055,7 +1047,6 @@
         // DESCARGAR IMAGEN
         // =============================================
         function descargarImagen(tipo) {
-            // Primero actualizar el recibo
             generarRecibo();
 
             const overlay = document.getElementById('loadingOverlay');
@@ -1092,7 +1083,7 @@
                 }
                 link.click();
 
-                mostrarMensaje('✅ Recibo descargado correctamente. Puedes continuar con una nueva reserva.', '#c6f6d5', '#22543d');
+                mostrarMensaje('✅ Recibo descargado correctamente.', '#c6f6d5', '#22543d');
             }).catch(function(error) {
                 overlay.classList.remove('active');
                 alert('Error al generar la imagen: ' + error.message);
@@ -1147,13 +1138,13 @@
             texto += `Tipo de Recogida: ${tipoRecogida}\n`;
             
             if (tipoRecogida === 'Hotel') {
-                texto += `Lugar de Recogida: ${document.getElementById('displayLugarRecogidaHotel').textContent}\n`;
+                texto += `Hotel: ${document.getElementById('displayLugarRecogidaHotel').textContent}\n`;
                 texto += `Habitación: ${document.getElementById('displayHabitacion').textContent}\n`;
                 texto += `Hora de Recogida: ${document.getElementById('displayHoraRecogida').textContent}\n`;
                 texto += `Lugar de Regreso: ${regreso}\n`;
             } else if (tipoRecogida === 'Airbnb') {
                 texto += `Apartamento: ${document.getElementById('displayApartamento').textContent}\n`;
-                texto += `Lugar de Recogida: ${document.getElementById('displayLugarRecogidaAirbnb').textContent}\n`;
+                texto += `Airbnb: ${document.getElementById('displayLugarRecogidaAirbnb').textContent}\n`;
                 texto += `Hora de Recogida: ${document.getElementById('displayHoraRecogida').textContent}\n`;
                 texto += `Lugar de Regreso: ${regreso}\n`;
             }
@@ -1164,9 +1155,9 @@
             texto += `republicexcursion.com`;
 
             navigator.clipboard.writeText(texto).then(() => {
-                mostrarMensaje('✅ Información del recibo copiada al portapapeles', '#c6f6d5', '#22543d');
+                mostrarMensaje('✅ Información copiada al portapapeles', '#c6f6d5', '#22543d');
             }).catch(() => {
-                alert('No se pudo copiar. Seleccione el texto manualmente.');
+                alert('No se pudo copiar.');
             });
         }
 
