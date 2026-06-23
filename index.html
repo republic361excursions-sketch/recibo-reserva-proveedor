@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recibo de Reserva - Party Boat Privado</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .header .subtitle {
+            color: #667eea;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #48bb78;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: #2d3748;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title .icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px 30px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-item .label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #a0aec0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-item .value {
+            font-size: 16px;
+            color: #2d3748;
+            font-weight: 500;
+            margin-top: 3px;
+        }
+
+        .info-item .value.highlight {
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .details-box {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .details-box .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .details-box .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .details-box .detail-label {
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .details-box .detail-value {
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .footer p {
+            color: #718096;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .footer .highlight-text {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .btn-print {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .btn-print:hover {
+            background: #5a67d8;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+            .btn-print {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>🚤 RECIBO DE RESERVA</h1>
+            <div class="subtitle">Party Boat Privado - Cap Cana</div>
+            <span class="badge">✅ CONFIRMADO</span>
+        </div>
+
+        <!-- DATOS DEL CLIENTE -->
+        <div class="section">
+            <div class="section-title">
+                <span class="icon">👤</span> DATOS DEL CLIENTE
+            </div>
+            <div class="info-grid">
+                <div class="info-item full-width">
+                    <span class="label">Cliente</span>
+                    <span class="value highlight">Samara Méndez Díaz</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Acompañantes</span>
+                    <span class="value">4 Personas</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Teléfono / WhatsApp</span>
+                    <span class="value">809-841-2909</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Idioma</span>
+                    <span class="value">Español</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATOS DE LA EXCURSIÓN -->
+        <div class="section">
+            <div class="section-title">
+                <span class="icon">📋</span> DATOS DE LA EXCURSIÓN
+            </div>
+            <div class="details-box">
+                <div class="detail-row">
+                    <span class="detail-label">Excursión Reservada</span>
+                    <span class="detail-value">Party Boat Privado</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Fecha</span>
+                    <span class="detail-value">05/06/2026</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Hora de Salida</span>
+                    <span class="detail-value">10:00 AM</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Lugar de Regreso</span>
+                    <span class="detail-value">Hyatt Ziva Cap Cana</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Cantidad de Personas</span>
+                    <span class="detail-value">Adultos: 4</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Hotel / Punto de Recogida</span>
+                    <span class="detail-value">Hyatt Ziva Cap Cana</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- INFORMACIÓN ADICIONAL -->
+        <div class="section">
+            <div class="section-title">
+                <span class="icon">ℹ️</span> INFORMACIÓN IMPORTANTE
+            </div>
+            <div style="background: #ebf8ff; padding: 15px; border-radius: 10px; border-left: 4px solid #3182ce;">
+                <p style="color: #2c5282; font-size: 14px; line-height: 1.6;">
+                    <strong>📌 Recomendaciones:</strong><br>
+                    • Llegar con 15 minutos de anticipación al punto de recogida.<br>
+                    • Llevar protector solar, toalla y ropa cómoda.<br>
+                    • El recorrido incluye bebidas y snacks a bordo.
+                </p>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>📧 <span class="highlight-text">reservas@partyboatcapcana.com</span></p>
+            <p>📞 <span class="highlight-text">+1 809-841-2909</span></p>
+            <p style="font-size: 12px; color: #a0aec0; margin-top: 10px;">
+                Este recibo es un comprobante de reserva válido. 
+                Presentarlo en el punto de encuentro.
+            </p>
+            <button class="btn-print" onclick="window.print()">
+                🖨️ Imprimir Recibo
+            </button>
+        </div>
+    </div>
+</body>
+</html>
