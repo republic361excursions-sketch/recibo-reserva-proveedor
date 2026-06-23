@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recibo de Reserva - Excursiones</title>
+    <title>Recibo de Reserva - Republic Excursion</title>
     <style>
         * {
             margin: 0;
@@ -222,7 +222,6 @@
             box-shadow: 0 2px 12px rgba(0,0,0,0.08);
         }
 
-        /* Este título SOLO se ve en pantalla, NO en impresión/PDF */
         .recibo-container .titulo-pantalla {
             color: #1a202c;
             font-size: 20px;
@@ -233,7 +232,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Este título NO se muestra en impresión */
         @media print {
             .recibo-container .titulo-pantalla {
                 display: none !important;
@@ -279,6 +277,25 @@
             font-weight: 600;
             margin-top: 6px;
             letter-spacing: 0.5px;
+        }
+
+        /* DOMINIO EN EL RECIBO */
+        .recibo-dominio {
+            text-align: center;
+            font-size: 12px;
+            color: #718096;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .recibo-dominio a {
+            color: #2b6cb0;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .recibo-dominio a:hover {
+            text-decoration: underline;
         }
 
         .recibo-numero {
@@ -372,6 +389,9 @@
                 background: #38a169 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+            }
+            .recibo-dominio {
+                display: none !important;
             }
         }
     </style>
@@ -499,7 +519,7 @@
                 </div>
             </div>
 
-            <!-- SIN RECOGIDA - No muestra ningún campo adicional -->
+            <!-- SIN RECOGIDA -->
             <div id="camposSinRecogida"></div>
 
             <div class="form-group">
@@ -559,10 +579,14 @@
 
         <!-- RECIBO -->
         <div class="recibo-container">
-            <!-- Este título SOLO se ve en pantalla -->
             <h2 class="titulo-pantalla">VISTA PREVIA DEL RECIBO</h2>
 
             <div class="recibo" id="recibo">
+                <!-- DOMINIO -->
+                <div class="recibo-dominio">
+                    <a href="https://republicexcursion.com" target="_blank">republicexcursion.com</a>
+                </div>
+
                 <div class="recibo-numero">
                     NÚMERO DE RESERVA: <strong id="displayNumero">SIN NÚMERO</strong>
                 </div>
@@ -633,7 +657,7 @@
                         <span class="etiqueta">Lugar de Recogida</span>
                         <span class="valor" id="displayLugarRecogidaAirbnb">-</span>
                     </div>
-                    <!-- Sin Recogida - No muestra nada adicional -->
+                    <!-- Sin Recogida -->
                     <div class="recibo-fila" id="filaHoraRecogida">
                         <span class="etiqueta">Hora de Recogida</span>
                         <span class="valor" id="displayHoraRecogida">-</span>
@@ -653,9 +677,9 @@
                     <div style="background: #f7fafc; padding: 12px; border-radius: 6px; font-size: 14px; color: #2d3748; border-left: 3px solid #2b6cb0;" id="displayNotas"></div>
                 </div>
 
-                <!-- FOOTER LIMPIO -->
                 <div class="recibo-footer">
                     <p>Este recibo es un comprobante de reserva válido.</p>
+                    <p style="margin-top: 5px; font-size: 10px; color: #a0aec0;">republicexcursion.com</p>
                 </div>
             </div>
         </div>
@@ -674,11 +698,9 @@
                 const filaLugarAirbnb = document.getElementById('filaLugarRecogidaAirbnb');
                 const filaHoraRecogida = document.getElementById('filaHoraRecogida');
                 
-                // Ocultar todos los campos de formulario
                 camposHotel.classList.add('hidden');
                 camposAirbnb.classList.add('hidden');
                 
-                // Ocultar todas las filas del recibo
                 filaLugarHotel.classList.add('hidden');
                 filaHabitacion.classList.add('hidden');
                 filaApartamento.classList.add('hidden');
@@ -698,14 +720,12 @@
                     filaHoraRecogida.classList.remove('hidden');
                     document.getElementById('displayTipoRecogida').textContent = 'Airbnb';
                 } else {
-                    // Sin Recogida - No muestra nada extra
                     document.getElementById('displayTipoRecogida').textContent = 'Sin Recogida';
                 }
                 generarRecibo();
             });
         });
 
-        // Mostrar/ocultar campo "Otro proveedor"
         document.getElementById('proveedor').addEventListener('change', function() {
             const otroGroup = document.getElementById('otroProveedorGroup');
             if (this.value === 'Otro') {
@@ -716,7 +736,6 @@
             generarRecibo();
         });
 
-        // Generar recibo automáticamente
         document.querySelectorAll('.form-group input, .form-group select, .form-group textarea').forEach(el => {
             if (el.id !== 'reciboNumero' && el.type !== 'radio') {
                 el.addEventListener('input', generarRecibo);
@@ -782,7 +801,6 @@
             const horaExcursionFormateada = formatearHora(horaExcursion);
             const tipoTexto = tipo === 'Privado' ? 'Privado' : 'Compartido';
 
-            // Campos específicos
             const lugarHotel = document.getElementById('lugarRecogidaHotel').value || '-';
             const habitacion = document.getElementById('habitacion').value || '-';
             const apartamento = document.getElementById('apartamento').value || '-';
@@ -792,7 +810,6 @@
 
             const horaRecogidaFormateada = formatearHora(horaRecogida);
 
-            // Actualizar recibo
             document.getElementById('displayNumero').textContent = numRecibo;
             document.getElementById('displayProveedor').textContent = excursionNombre;
             document.getElementById('displayCliente').textContent = cliente;
@@ -807,7 +824,6 @@
             document.getElementById('displayRegreso').textContent = regreso;
             document.getElementById('displayTransporte').textContent = transporteTexto;
 
-            // Mostrar/ocultar según tipo
             if (tipoRecogida && tipoRecogida.value === 'hotel') {
                 document.getElementById('displayLugarRecogidaHotel').textContent = lugarHotel;
                 document.getElementById('displayHabitacion').textContent = habitacion;
@@ -817,11 +833,9 @@
                 document.getElementById('displayLugarRecogidaAirbnb').textContent = lugarAirbnb;
                 document.getElementById('displayHoraRecogida').textContent = horaRecogidaFormateada;
             } else {
-                // Sin Recogida - No muestra nada adicional
                 document.getElementById('displayHoraRecogida').textContent = '-';
             }
 
-            // Notas
             const notasSection = document.getElementById('notasSection');
             const displayNotas = document.getElementById('displayNotas');
             if (notas.trim()) {
@@ -882,7 +896,8 @@
             texto += `Lugar de Regreso: ${regreso}\n`;
             texto += `Transporte: ${transporte}\n`;
             texto += `\n================================\n`;
-            texto += `Este recibo es un comprobante de reserva válido.`;
+            texto += `Este recibo es un comprobante de reserva válido.\n`;
+            texto += `republicexcursion.com`;
 
             navigator.clipboard.writeText(texto).then(() => {
                 alert('Información del recibo copiada al portapapeles');
@@ -891,7 +906,6 @@
             });
         }
 
-        // Generar recibo al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
             const hoy = new Date();
             const fechaStr = hoy.toISOString().split('T')[0];
