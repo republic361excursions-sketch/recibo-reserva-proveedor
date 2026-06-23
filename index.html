@@ -256,8 +256,6 @@
             letter-spacing: 1px;
         }
 
-        /* ELIMINADO: .recibo-header .subtitulo (nombre de excursión) */
-
         .recibo-header .estado {
             display: inline-block;
             background: #38a169;
@@ -565,7 +563,8 @@
 
             <div id="camposSinRecogida"></div>
 
-            <div class="form-group">
+            <!-- LUGAR DE REGRESO - Se oculta cuando es Sin Recogida -->
+            <div class="form-group" id="grupoRegreso">
                 <label>LUGAR DE REGRESO</label>
                 <input type="text" id="regreso" placeholder="Ej: Hyatt Ziva Cap Cana">
                 <div class="hint">Donde se dejará al cliente después de la excursión</div>
@@ -636,7 +635,6 @@
                 
                 <div class="recibo-header">
                     <div class="titulo">RECIBO DE RESERVA</div>
-                    <!-- ELIMINADO: subtitulo (nombre de excursión) -->
                     <span class="estado">CONFIRMADO</span>
                 </div>
 
@@ -702,7 +700,8 @@
                         <span class="etiqueta">Hora de Recogida</span>
                         <span class="valor" id="displayHoraRecogida">-</span>
                     </div>
-                    <div class="recibo-fila">
+                    <!-- LUGAR DE REGRESO - Se oculta cuando es Sin Recogida -->
+                    <div class="recibo-fila" id="filaRegreso">
                         <span class="etiqueta">Lugar de Regreso</span>
                         <span class="valor" id="displayRegreso">-</span>
                     </div>
@@ -730,6 +729,8 @@
             radio.addEventListener('change', function() {
                 const camposHotel = document.getElementById('camposHotel');
                 const camposAirbnb = document.getElementById('camposAirbnb');
+                const grupoRegreso = document.getElementById('grupoRegreso');
+                const filaRegreso = document.getElementById('filaRegreso');
                 
                 const filaLugarHotel = document.getElementById('filaLugarRecogidaHotel');
                 const filaHabitacion = document.getElementById('filaHabitacion');
@@ -737,6 +738,7 @@
                 const filaLugarAirbnb = document.getElementById('filaLugarRecogidaAirbnb');
                 const filaHoraRecogida = document.getElementById('filaHoraRecogida');
                 
+                // Ocultar todos
                 camposHotel.classList.add('hidden');
                 camposAirbnb.classList.add('hidden');
                 
@@ -746,19 +748,27 @@
                 filaLugarAirbnb.classList.add('hidden');
                 filaHoraRecogida.classList.add('hidden');
                 
+                // Mostrar según selección
                 if (this.value === 'hotel') {
                     camposHotel.classList.remove('hidden');
                     filaLugarHotel.classList.remove('hidden');
                     filaHabitacion.classList.remove('hidden');
                     filaHoraRecogida.classList.remove('hidden');
+                    grupoRegreso.classList.remove('hidden');
+                    filaRegreso.classList.remove('hidden');
                     document.getElementById('displayTipoRecogida').textContent = 'Hotel';
                 } else if (this.value === 'airbnb') {
                     camposAirbnb.classList.remove('hidden');
                     filaApartamento.classList.remove('hidden');
                     filaLugarAirbnb.classList.remove('hidden');
                     filaHoraRecogida.classList.remove('hidden');
+                    grupoRegreso.classList.remove('hidden');
+                    filaRegreso.classList.remove('hidden');
                     document.getElementById('displayTipoRecogida').textContent = 'Airbnb';
                 } else {
+                    // Sin Recogida - Oculta Lugar de Regreso
+                    grupoRegreso.classList.add('hidden');
+                    filaRegreso.classList.add('hidden');
                     document.getElementById('displayTipoRecogida').textContent = 'Sin Recogida';
                 }
                 generarRecibo();
@@ -963,13 +973,15 @@
                 texto += `Lugar de Recogida: ${document.getElementById('displayLugarRecogidaHotel').textContent}\n`;
                 texto += `Habitación: ${document.getElementById('displayHabitacion').textContent}\n`;
                 texto += `Hora de Recogida: ${document.getElementById('displayHoraRecogida').textContent}\n`;
+                texto += `Lugar de Regreso: ${regreso}\n`;
             } else if (tipoRecogida === 'Airbnb') {
                 texto += `Apartamento: ${document.getElementById('displayApartamento').textContent}\n`;
                 texto += `Lugar de Recogida: ${document.getElementById('displayLugarRecogidaAirbnb').textContent}\n`;
                 texto += `Hora de Recogida: ${document.getElementById('displayHoraRecogida').textContent}\n`;
+                texto += `Lugar de Regreso: ${regreso}\n`;
             }
+            // Sin Recogida - No incluye Lugar de Regreso
             
-            texto += `Lugar de Regreso: ${regreso}\n`;
             texto += `Transporte: ${transporte}\n`;
             texto += `\n================================\n`;
             texto += `Este recibo es un comprobante de reserva válido.\n`;
